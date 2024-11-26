@@ -27,10 +27,13 @@ const info = defineModel({
       v-model="info"
       required
     />
-    <div class="peer-focus:scale-x-100 peer-valid:scale-x-100 absolute bottom-0 h-[2px] w-full bg-gradient-to-r from-[#eb6b26] to-[#eb6b26] scale-x-0 transition-all duration-300 ease"></div>
+    <div
+      class="peer-focus:scale-x-100 peer-valid:scale-x-100 absolute bottom-0 h-[2px] w-full bg-gradient-to-r from-[#eb6b26] to-[#eb6b26] scale-x-0 transition-all duration-300 ease"
+    ></div>
     <label
       class="absolute bottom-[10px] left-0 text-gray-500 pointer-events-none transition-all duration-300 ease peer-valid:-translate-x-full peer-valid:text-[#eb6b26] peer-valid:text-base peer-valid:font-bold peer-valid:border-0 peer-focus:-translate-x-full peer-focus:text-[#eb6b26] peer-focus:text-base peer-focus:font-bold peer-focus:border-0"
       :for="id"
-    >{{ label }}</label>
+      >{{ label }}</label
+    >
   </div>
 </template>

@@ -1,39 +1,50 @@
-# java-work
-
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
+## 开发     
+建议使用VScode+vue插件         
+如果没有pnpm,执行以下指令
+```sh
+npm install -g pnpm
+```    
+如果没有npm，在[这里](https://nodejs.org/)下载        
+记得添加环境变量
 
 ## Project Setup
-
+克隆完成后进入根目录执行
 ```sh
 pnpm install
 ```
 
 ### Compile and Hot-Reload for Development
-
+开发环境，可以实时查看变化
 ```sh
 pnpm dev
 ```
 
 ### Type-Check, Compile and Minify for Production
-
+生产环境，部署的时候用
 ```sh
 pnpm build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### 代码规范        
+组件名必须由两个单词组成，并且使用大驼峰命名。比如FormInput.vue       
+页面命名最后是View，并且使用大驼峰命名。比如HomeView.vue            
+接口/类型名使用大驼峰命名，变量使用小驼峰命名                  
 
+写完代码记得用prettier插件格式化代码                 
+尽量不要写成anyscript       
+
+***
+pr前先拉取，再推送            
+先连接上游远程仓库
 ```sh
-pnpm lint
+git remote add upstream https://github.com/water2027/java-work.git
 ```
+之后拉取代码可以这样           
+```sh
+git pull upstream master --rebase
+```
+推送到自己仓库还是一样
+```sh
+git push origin master
+```
+                     

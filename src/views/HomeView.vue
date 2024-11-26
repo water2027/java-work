@@ -6,17 +6,27 @@ import FormInput from '@/components/FormInput.vue';
 const username = ref('');
 const password = ref('');
 
-const loginHandler = ()=>{
-  console.log(username.value)
-  console.log(password.value)
-}
+const loginHandler = () => {
+  console.log(username.value);
+  console.log(password.value);
+};
 </script>
 
 <template>
   <div>
     <FormContainer class="w-1/2 mx-auto mt-11" @submit-form="loginHandler">
-      <FormInput id="username" label="Username" type="text" v-model="username" />
-      <FormInput id="password" label="Password" type="password" v-model="password" />
+      <FormInput
+        id="username"
+        label="Username"
+        type="text"
+        v-model="username"
+      />
+      <FormInput
+        id="password"
+        label="Password"
+        type="password"
+        v-model="password"
+      />
     </FormContainer>
   </div>
 </template>

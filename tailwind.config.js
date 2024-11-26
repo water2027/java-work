@@ -5,11 +5,7 @@ export default {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      height: {
-        90: '90vh',
-      }
-    },
+    extend: {},
   },
   plugins: [],
 }
