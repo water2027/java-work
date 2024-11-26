@@ -38,7 +38,7 @@ const sendVerificationCode = () => {
       <FormInput v-model="password" label="密码" id="password" />
       <FormInput v-model="password2" label="确认密码" id="password2" />
       <FormInput v-model="email" label="邮箱" id="email" />
-      <button type="button" :disabled="!emailCorrect" class="mt-2 mb-2 w-full h-10 bg-[#eb6b26] disabled:bg-zinc-600 text-white border-0 text-lg cursor-pointer mt-5 rounded-[20px] flex justify-center items-center hover:bg-[#ff7e3b]" @click="sendVerificationCode">{{ emailCorrect?'发送验证码':'需要正确的邮箱' }}</button>
+      <button type="button" :disabled="!emailCorrect" class="mb-2 w-full h-10 bg-[#eb6b26] disabled:bg-zinc-600 text-white border-0 text-lg cursor-pointer mt-5 rounded-[20px] flex justify-center items-center hover:bg-[#ff7e3b]" @click="sendVerificationCode">{{ emailCorrect?'发送验证码':'需要正确的邮箱' }}</button>
       <FormInput v-model="code" label="验证码" id="code" />
     </FormContainer>
   </div>
