@@ -36,10 +36,11 @@ pnpm build
 
 ### 代码规范
 
-组件名必须由两个单词组成，并且使用大驼峰命名。比如 FormInput.vue  
-页面命名最后是 View，并且使用大驼峰命名。比如 HomeView.vue  
+组件名必须由两个单词组成，并且使用大驼峰命名。比如 FormInput.vue。组件应该放在components文件夹               
+composables是组合式函数，可以将一些通用逻辑放在这里                           
+页面命名最后是 View，并且使用大驼峰命名。比如 HomeView.vue。页面应该放在views文件夹                 
 接口/类型名使用大驼峰命名，变量使用小驼峰命名  
-一个 template 标签里只使用一个二级标签
+一个 template 标签里只使用一个二级标签               
 
 ```vue
 <template>
