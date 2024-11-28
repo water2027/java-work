@@ -3,7 +3,8 @@ import { ref } from 'vue';
 import FormContainer from '@/components/FormContainer.vue';
 
 import { type CustomFormData, useFormExam } from '@/composables/FormExam';
-
+//Vue3的响应式api,用来创建响应式变量,form
+//即当这个值变化了,就会自动重新渲染dom(即每个元素)
 const form = ref<CustomFormData[]>([
   {
     id: 'username',

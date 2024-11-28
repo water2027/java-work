@@ -3,8 +3,8 @@ import { type CustomFormData } from '@/composables/FormExam';
 
 import FormInput from '@/components/FormInput.vue';
 
-defineProps({
-  formName: {
+defineProps({//定义父组件向子组件传递数据的一种方式
+  formName: {//表示要传递字符串(不是必须,没传就是"提交")
     type: String,
     required: false,
     default: '提交',
@@ -14,12 +14,13 @@ defineProps({
     required: false,
     default: false,
   },
-  formData: {
+  formData: {//要传递数组
     type: Array as () => CustomFormData[],
     required: true,
   },
 });
 </script>
+
 <template>
   <form
     class="bg-[#4545453d] p-12 mx-auto"
