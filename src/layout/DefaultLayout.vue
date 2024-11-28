@@ -13,7 +13,10 @@
       <RouterLink to="/profile" class="p-2 hover:bg-slate-500 rounded-lg"
         >个人中心</RouterLink
       >
-      <RouterLink to="/community" class="p-2 hover:bg-slate-500 rounded-lg"
+      <RouterLink to="/chat" class="p-2 hover:bg-slate-500 rounded-lg"
+        >来聊天吧</RouterLink
+      >
+      <RouterLink to="/save" class="p-2 hover:bg-slate-500 rounded-lg"
         >我的收藏</RouterLink
       >
       <RouterLink to="/about" class="p-2 hover:bg-slate-500 rounded-lg"
