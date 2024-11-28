@@ -4,9 +4,6 @@ import { defineProps } from 'vue';
 
 import { type User } from '@/store/userStore';
 
-// const props = defineProps<{
-//   user: User;
-// }>();
 defineProps({
   user:{
     type: Object as () => User,
