@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { computed } from 'vue';  // 添加这一行
 
 
-interface User {
+export interface User {
   username: string;
   email: string;
   profilePicture?: string; // 可选的头像字段

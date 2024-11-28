@@ -2,26 +2,31 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 
-// 定义用户数据的类型
-interface User {
-  username: string;
-  email: string;
-  profilePicture?: string;
-}
+import { type User } from '@/store/userStore';
 
-const props = defineProps<{
-  user: User;
-}>();
+// const props = defineProps<{
+//   user: User;
+// }>();
+defineProps({
+  user:{
+    type: Object as () => User,
+    required: true
+  }
+})
 </script>
 
 <template>
   <div class="profile-card">
-    <div v-if="props.user.profilePicture">
-      <img :src="props.user.profilePicture" alt="Profile Picture" class="profile-image" />
+    <div>
+      <img
+        :src="user.profilePicture||'https://via.placeholder.com/150'"
+        alt="Profile Picture"
+        class="profile-image"
+      />
     </div>
     <div class="user-info">
-      <h2>{{ props.user.username }}</h2>
-      <p>{{ props.user.email }}</p>
+      <h2>{{ user.username }}</h2>
+      <p>{{ user.email }}</p>
     </div>
   </div>
 </template>
