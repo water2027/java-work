@@ -3,8 +3,10 @@ import { type CustomFormData } from '@/composables/FormExam';
 
 import FormInput from '@/components/FormInput.vue';
 
-defineProps({//定义父组件向子组件传递数据的一种方式
-  formName: {//表示要传递字符串(不是必须,没传就是"提交")
+defineProps({
+  //定义父组件向子组件传递数据的一种方式
+  formName: {
+    //表示要传递字符串(不是必须,没传就是"提交")
     type: String,
     required: false,
     default: '提交',
@@ -14,7 +16,8 @@ defineProps({//定义父组件向子组件传递数据的一种方式
     required: false,
     default: false,
   },
-  formData: {//要传递数组
+  formData: {
+    //要传递数组
     type: Array as () => CustomFormData[],
     required: true,
   },
@@ -28,6 +31,7 @@ defineProps({//定义父组件向子组件传递数据的一种方式
   >
     <FormInput
       v-for="item in formData"
+      :key="item.id"
       :id="item.id"
       :label="item.label"
       v-model="item.value"
