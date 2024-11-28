@@ -5,36 +5,59 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: ()=>import('@/views/HomeView.vue'),
+      name: 'default',
+      component: () => import('@/layout/DefaultLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: () => import('@/views/HomeView.vue'),
+        },
+        {
+          path: 'save',
+          name: 'save',
+          component: () => import('@/views/SaveView.vue'),
+        },
+        {
+          path: 'about',
+          name: 'about',
+          component: () => import('@/views/AboutView.vue'),
+        },
+        { 
+          path: 'profile',
+          name: 'profile',
+          component: () => import('@/views/ProfileView.vue'),
+        },
+        {
+          path: 'community',
+          name: 'community',
+          component: () => import('@/views/CommunityView.vue'),
+        },
+        
+      ],
     },
     {
       path: '/auth',
       name: 'auth',
-      component: ()=>import('@/layout/AuthLayout.vue'),
-      children:[
+      component: () => import('@/layout/AuthLayout.vue'),
+      children: [
         {
           path: 'login',
           name: 'login',
-          component: ()=>import('@/views/LoginView.vue')
+          component: () => import('@/views/LoginView.vue'),
         },
         {
           path: 'register',
           name: 'register',
-          component: ()=>import('@/views/RegisterView.vue')
+          component: () => import('@/views/RegisterView.vue'),
         },
         {
           path: 'reset',
           name: 'reset',
-          component: ()=>import('@/views/ResetView.vue')
+          component: () => import('@/views/ResetView.vue'),
         },
-      ]
+      ],
     },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: ()=>import('@/views/ProfileView.vue'),
-    }
   ],
 });
 

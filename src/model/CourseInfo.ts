@@ -9,4 +9,5 @@ export interface CourseInfo {
   examTime?: Date;
   location: string;
   time: string;
+  backgroundImage?: string;
 }
