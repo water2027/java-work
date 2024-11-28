@@ -1,17 +1,6 @@
 <script setup lang="ts">
 import { type PropType } from 'vue';
-interface CourseInfo {
-  id: number;
-  name: string;
-  teacher: string;
-  score: number;
-  start: Date;
-  end: Date;
-  isExam: boolean;
-  examTime?: Date;
-  location: string;
-  time: string;
-}
+import { type CourseInfo } from '@/model/CourseInfo';
 defineProps({
   info: {
     type: Object as PropType<CourseInfo>,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type CustomFormData } from '@/composables/FormExam';
+import { type CustomFormData } from '@/model/CustomFormData';
 
 import FormInput from '@/components/FormInput.vue';
 
