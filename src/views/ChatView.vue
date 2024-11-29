@@ -12,13 +12,18 @@ const user = ref<User>({
 });
 </script>
 <template>
-  <div class="w-3/5 h-full mx-auto mt-10 flex flex-row">
-    <div class="custom-scrollbar w-1/5 max-h-[80vh] overflow-auto">
+  <div class="w-3/4 h-full mx-auto mt-10 flex flex-row">
+    <div class="w-1/12 flex flex-col">
+      <img class="w-full scale-75" :src="!!user.profilePicture?'':'/default-avatar.svg'" :alt="user.username">
+      <span class="text-center my-5">人</span>
+      <span class="text-center my-5">群</span>
+    </div>
+    <div class="custom-scrollbar w-1/6 max-h-[80vh] overflow-auto">
       <ContactsCard v-for="index in 12" :key="index" :user="user" />
     </div>
-    <div class="w-4/5 flex flex-col border border-slate-500 h-[80vh]">
+    <div class="w-3/4 flex flex-col border border-slate-500 h-[80vh]">
       <h2 class="text-center">{{ user.username }}</h2>
-      <div class="h-[75vh]">
+      <div class="h-[70vh]">
 
       </div>
       <div class="h-[10vh] w-full bg-slate-500">
@@ -29,20 +34,18 @@ const user = ref<User>({
 </template>
 <style scoped>
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+  @apply w-1
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  @apply bg-slate-200
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 4px;
-  border: 2px solid #f1f1f1;
+  @apply bg-[#888] rounded-md border-2 border-slate-500
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  @apply bg-[#555]
 }
 </style>

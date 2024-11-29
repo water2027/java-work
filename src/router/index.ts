@@ -91,15 +91,16 @@ const router = createRouter({
 });
 
 router.beforeEach((to,from,next)=>{
-  if(to.meta.auth){
-    if(localStorage.getItem('token')){
-      next();
-    }else{
-      next({name:'login'});
-    }
-  }else{
-    next();
-  }
+  // if(to.meta.auth){
+  //   if(localStorage.getItem('token')){
+  //     next();
+  //   }else{
+  //     next({name:'login'});
+  //   }
+  // }else{
+  //   next();
+  // }
+  next();
 })
 
 export default router;
