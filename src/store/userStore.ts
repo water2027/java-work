@@ -3,12 +3,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { computed } from 'vue';  // 添加这一行
 
-
-export interface User {
-  username: string;
-  email: string;
-  profilePicture?: string; // 可选的头像字段
-}
+import { type User } from '@/model/User';
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null); // 存储当前登录的用户信息

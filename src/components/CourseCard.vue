@@ -7,12 +7,18 @@ defineProps({
     required: true,
   },
 });
-
 </script>
 <template>
   <div
     class="relative flex flex-row bg-slate-400 p-4 py-8 m-2 shadow-md shadow-slate-700 before:content-['java大学'] before:absolute before:top-4 before:text-slate-500 before:opacity-80"
-    :style="info.backgroundImage ? { backgroundImage: `url(${info.backgroundImage})`,objectFit:'cover' } : {}"
+    :style="
+      info.backgroundImage
+        ? {
+            backgroundImage: `url(${info.backgroundImage})`,
+            objectFit: 'cover',
+          }
+        : {}
+    "
   >
     <div class="w-[90%] flex flex-col *:my-2 *:w-full">
       <h2>
@@ -64,19 +70,18 @@ defineProps({
           <span>{{ info.score }}学分</span>
         </div>
         <div>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <rect
-              x="3"
-              y="3"
-              width="10"
-              height="10"
-              rx="2"
-              stroke="currentColor"
-            />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
             <path
-              d="M3.5 6.5h9M6 2.5v2M10 2.5v2"
-              stroke="currentColor"
               stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
             />
           </svg>
           <span>{{ info.isExam ? '考试' : '考核' }}</span>
@@ -87,24 +92,18 @@ defineProps({
       </div>
       <div class="flex flex-row">
         <svg
-          class="w-4"
           xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          enable-background="new 0 0 32 32"
-          version="1.1"
-          viewBox="0 0 32 32"
-          xml:space="preserve"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
         >
-          <g id="Outline_copy_2">
-            <g>
-              <path
-                d="M20.656,0.927C14.712-0.805,8.024,1.03,3.905,5.677c-4.619,5.209-5.21,13.064-1.4,18.897    c3.512,5.376,10.068,8.012,16.344,6.885c7.572-1.36,12.983-7.864,13.151-15.507C31.848,9.018,27.377,2.885,20.656,0.927z     M15.403,31.296C7.347,30.921,0.957,23.932,0.957,15.951c0-8.376,7.088-15.641,15.602-15.245    c8.173,0.381,14.271,7.362,14.445,15.345C30.822,24.423,24.044,31.698,15.403,31.296z"
-              />
-              <path
-                d="M20.778,20.095c-0.964-0.964-1.928-1.927-2.892-2.891c-0.373-0.372-1.211-0.926-1.41-1.409    c-0.179-0.433,0.002-1.322,0.002-1.799c0-1.341,0-2.682,0-4.023c0-1.951,0-3.901,0-5.852c0-0.26-0.994-0.194-0.994,0.111    c0,1.951,0,3.901,0,5.852c0,1.341,0,2.682,0,4.023c0,0.488-0.179,1.395,0.012,1.854c0.169,0.407,0.885,0.898,1.184,1.197    c0.935,0.935,1.87,1.87,2.805,2.804c1.441,1.441,2.882,2.881,4.323,4.322c0.212,0.212,1.124-0.035,0.947-0.212    C23.43,22.746,22.104,21.421,20.778,20.095z"
-              />
-            </g>
-          </g>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+          />
         </svg>
         <time :datetime="info.start.toISOString()">
           {{ info.start.toLocaleDateString() }} -

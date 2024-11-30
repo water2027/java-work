@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type User } from '@/store/userStore';
+import { type User } from '@/model/User';
 
 import { type PropType } from 'vue';
 defineProps({
