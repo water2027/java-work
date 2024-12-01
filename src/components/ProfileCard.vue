@@ -24,6 +24,7 @@ defineProps({
     <div class="user-info">
       <h2>{{ user.username }}</h2>
       <p>{{ user.email }}</p>
+      <p>{{ user.role }}</p>
     </div>
   </div>
 </template>

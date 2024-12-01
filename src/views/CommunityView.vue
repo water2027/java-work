@@ -9,6 +9,7 @@ import { ref } from 'vue';
 const mockUser: User = {
   username: 'john_doe',
   email: 'john@example.com',
+  role:'admin',
 };
 
 const groupInfos: GroupInfo[] = [
