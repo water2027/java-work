@@ -20,7 +20,7 @@ const info = defineModel({
     ></div>
     <label
       class="absolute bottom-[10px] left-0 text-gray-500 pointer-events-none transition-all duration-300 ease peer-valid:-translate-x-[105%] peer-valid:text-[#eb6b26] peer-valid:text-base peer-valid:font-bold peer-valid:border-0 peer-focus:-translate-x-[105%] peer-focus:text-[#eb6b26] peer-focus:text-base peer-focus:font-bold peer-focus:border-0"
-      :for="$attrs.id"
+      :for="$attrs.id as string"
       >{{ $attrs.label }}</label
     >
   </div>

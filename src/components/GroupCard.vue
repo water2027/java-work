@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { type PropType } from 'vue';
 import { type GroupInfo } from '@/model/GroupInfo';
-import { type User } from '@/model/User';
 
 defineProps({
   groupInfo: {
