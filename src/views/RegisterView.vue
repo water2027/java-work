@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useFormExam } from '@/composables/FormExam';
@@ -71,12 +71,14 @@ const registerHandler = async () => {
     email: form.value[3].value,
     role: '学生',
   };
-  const { err } = await register(infoSend);
-  if (err.value) {
-    alert(err.value);
-  } else {
-    router.push('/auth/login');
-  }
+  const { isLoading,err } = register(infoSend);
+  watch(isLoading,()=>{
+    if (err.value) {
+      alert(err.value);
+    } else {
+      router.push('/auth/login');
+    }
+  })
 };
 
 const sendVerificationCode = () => {
