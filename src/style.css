@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+a {
+  color: #4eafa6;
+  text-decoration: none;
+  animation: all 0.5s ease;
+}
+
+a:hover{
+    color: #98703d;
+    text-decoration: underline;
+}

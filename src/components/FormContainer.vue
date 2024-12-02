@@ -26,7 +26,7 @@ defineProps({
 
 <template>
   <form
-    class="bg-[#4545453d] p-12 mx-auto"
+    class="p-24 mx-auto bg-teal-100"
     @submit.prevent="$emit('SubmitForm')"
   >
     <FormInput

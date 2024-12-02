@@ -1,9 +1,20 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-import { useFormExam, type CustomFormData } from '@/composables/FormExam';
+import { useFormExam } from '@/composables/FormExam';
+
+import { register } from '@/api/UserApi/Register';
+
+import { type CustomFormData } from '@/model/CustomFormData';
+import {
+  type RegisterReturn,
+  type RegisterSend,
+} from '@/model/dto/UserApi/Register';
 
 import FormContainer from '@/components/FormContainer.vue';
+
+const router = useRouter();
 
 const form = ref<CustomFormData[]>([
   {
@@ -53,7 +64,20 @@ const emailCorrect = computed(() => {
   return form.value[3].reg?.test(form.value[3].value);
 });
 
-const registerHandler = () => {};
+const registerHandler = async () => {
+  const infoSend: RegisterSend = {
+    username: form.value[0].value,
+    password: form.value[1].value,
+    email: form.value[3].value,
+    role: '学生',
+  };
+  const { err } = await register(infoSend);
+  if (err.value) {
+    alert(err.value);
+  } else {
+    router.push('/auth/login');
+  }
+};
 
 const sendVerificationCode = () => {
   console.log('发送验证码');
@@ -64,7 +88,7 @@ const sendVerificationCode = () => {
     class="w-1/2 mt-12"
     formName="注册"
     :formData="form"
-    @form-submit="registerHandler"
+    @submit-form="registerHandler"
     :disabled="!correct || !passwordCorrect"
   >
     <p class="mt-5 mb-5 text-center">
@@ -74,6 +98,9 @@ const sendVerificationCode = () => {
           : '密码必须包含大小写字母、数字、特殊字符，长度8-12位，且两次输入密码一致'
       }}</span>
     </p>
+    <div class="flex flex-row justify-around">
+      <router-link to="/auth/login">已有账号？</router-link>
+    </div>
     <button
       type="button"
       :disabled="!emailCorrect"

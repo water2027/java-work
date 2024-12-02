@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useFormExam, type CustomFormData } from '@/composables/FormExam';
+import { useFormExam } from '@/composables/FormExam';
+import { type CustomFormData } from '@/model/CustomFormData';
 
 import FormContainer from '@/components/FormContainer.vue';
 
@@ -55,27 +56,30 @@ const sendVerificationCode = () => {
 };
 </script>
 <template>
-    <FormContainer
-      class="w-1/2 mt-12"
-      formName="注册"
-      :formData="form"
-      @form-submit="registerHandler"
-      :disabled="!correct || !passwordCorrect"
+  <FormContainer
+    class="w-1/2 mt-12"
+    formName="注册"
+    :formData="form"
+    @form-submit="registerHandler"
+    :disabled="!correct || !passwordCorrect"
+  >
+    <p class="mt-5 mb-5 text-center">
+      <span :class="passwordCorrect ? 'text-green-400' : 'text-red-400'">{{
+        passwordCorrect
+          ? '正确!'
+          : '密码必须包含大小写字母、数字、特殊字符，长度8-12位，且两次输入密码一致'
+      }}</span>
+    </p>
+    <div class="flex flex-row justify-around">
+      <router-link to="/auth/login">已有账号？</router-link>
+    </div>
+    <button
+      type="button"
+      :disabled="!emailCorrect"
+      class="mb-2 w-full h-10 bg-[#eb6b26] disabled:bg-zinc-600 text-white border-0 text-lg cursor-pointer mt-5 rounded-[20px] flex justify-center items-center hover:bg-[#ff7e3b]"
+      @click="sendVerificationCode"
     >
-      <p class="mt-5 mb-5 text-center">
-        <span :class="passwordCorrect ? 'text-green-400' : 'text-red-400'">{{
-          passwordCorrect
-            ? '正确!'
-            : '密码必须包含大小写字母、数字、特殊字符，长度8-12位，且两次输入密码一致'
-        }}</span>
-      </p>
-      <button
-        type="button"
-        :disabled="!emailCorrect"
-        class="mb-2 w-full h-10 bg-[#eb6b26] disabled:bg-zinc-600 text-white border-0 text-lg cursor-pointer mt-5 rounded-[20px] flex justify-center items-center hover:bg-[#ff7e3b]"
-        @click="sendVerificationCode"
-      >
-        {{ emailCorrect? '发送验证码' : '请填写正确的邮箱' }}
-      </button>
-    </FormContainer>
+      {{ emailCorrect ? '发送验证码' : '请填写正确的邮箱' }}
+    </button>
+  </FormContainer>
 </template>

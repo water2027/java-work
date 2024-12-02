@@ -1,14 +1,10 @@
 import { ref, type Ref } from "vue";
 
-const apiBaseUrl = import.meta.env.API_BASE_URL;
+import { type ReturnData } from "@/model/dto/ReturnData";
 
-interface ResponseData<T> {
-  code: number;
-  message: string;
-  data: T;
-}
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
-interface RequestResult<T> {
+export interface RequestResult<T> {
   data: Ref<T | undefined>;
   isLoading: Ref<boolean>;
   err: Ref<string>;
@@ -25,7 +21,7 @@ async function useRequest<T>(
   if (tokenIsNeeded) {
     // 获取token的操作
     // ...
-    const token = "token";
+    const token = localStorage.getItem("token");
     const headers = new Headers(requestInit.headers ?? {});
     headers.set("Authorization", `Bearer ${token}`);
     requestInit.headers = headers;
@@ -35,7 +31,7 @@ async function useRequest<T>(
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const jsonData: ResponseData<T> = await response.json();
+    const jsonData: ReturnData<T> = await response.json();
     if (jsonData.code >= 200 && jsonData.code < 300) {
       data.value = jsonData.data;
     } else {
