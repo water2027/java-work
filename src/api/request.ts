@@ -12,8 +12,13 @@ export interface RequestResult<T> {
 
 async function useRequest<T>(
   url: string,
-  requestInit: RequestInit,
-  tokenIsNeeded: boolean
+  requestInit: RequestInit = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  },
+  tokenIsNeeded: boolean = true
 ): Promise<RequestResult<T>> {
   const data: Ref<T | undefined> = ref<T>();
   const isLoading = ref(true);

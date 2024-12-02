@@ -11,7 +11,7 @@ const router = createRouter({
         {
           path: '',
           name: 'home',
-          component: () => import('@/views/HomeView.vue'),
+          component: () => import('@/views/CoursesCenter.vue'),
         },
         {
           path: 'save',

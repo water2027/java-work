@@ -127,11 +127,11 @@ defineProps({
         <span>{{ info.location }} | {{ info.time }}</span>
       </div>
     </div>
-    <div class="min-h-32 w-[10%] text-center my-auto">
+    <div class="min-h-32 w-[10%] text-center my-auto flex flex-col">
       <RouterLink :to="'/course/' + info.id" class="text-slate-600"
         >加入</RouterLink
       >
-      <span class="text-slate-600">收藏</span>
+      <a href="javascript:;" class="text-slate-600">收藏</a>
     </div>
   </div>
 </template>

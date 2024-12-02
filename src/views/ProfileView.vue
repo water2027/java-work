@@ -2,27 +2,29 @@
 import { useUserStore } from '@/store/userStore'; // 引入 Pinia store
 
 const userStore = useUserStore(); // 获取 user store
+const { user, isLoggedIn } = userStore
+
 const logoutHandler = () => {
-  userStore.logout(); // 调用 logout 方法清除用户数据
-};
+  
+}
 </script>
 
 <template>
   <!-- 如果已登录，显示个人主页信息 -->
-  <div v-if="userStore.isLoggedIn" class="p-5 max-w-[600px] mx-auto text-center">
+  <div v-if="isLoggedIn" class="p-5 max-w-[600px] mx-auto text-center">
     <div class="bg-white p-5 rounded-lg shadow text-center mb-5">
       <!-- 头像，默认占位图 -->
       <img
         :src="
-          userStore.user?.profilePicture || 'https://via.placeholder.com/150'
+          user.profilePicture || 'https://via.placeholder.com/150'
         "
         alt="User Avatar"
         class="w-[150px] h-[150px] rounded-full object-cover mb-5"
       />
       <!-- 显示用户名 -->
-      <h2>{{ userStore.user?.username||'未命名' }}</h2>
+      <h2>{{ user.username||'未命名' }}</h2>
       <!-- 显示邮箱 -->
-      <p class="text-base text-gray-600">{{ userStore.user?.email }}</p>
+      <p class="text-base text-gray-600">{{ user.email }}</p>
     </div>
 
     <!-- 退出登录按钮 -->
