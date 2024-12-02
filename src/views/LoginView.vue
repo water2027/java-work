@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import FormContainer from '@/components/FormContainer.vue';
@@ -38,17 +38,21 @@ const loginHandler = async () => {
     email: form.value[0].value,
     password: form.value[1].value,
   };
-  const { data, err } = await login(infoSend);
-  if (err.value) {
-    console.log(err);
-  }else{
-    if(data.value) {
-      localStorage.setItem('token', data.value.token);
-      router.push('/');
-    }else{
-      console.log('error');
+  const { data, isLoading, err } = login(infoSend);
+  watch(isLoading, (newVal) => {
+    if (err.value) {
+      console.log(err);
+    } else {
+      if (!isLoading.value) {
+        if (data.value?.token) {
+          localStorage.setItem('token', data.value.token);
+          router.push('/');
+        }
+      } else {
+        console.log('error');
+      }
     }
-  }
+  });
 };
 </script>
 <template>
@@ -58,9 +62,9 @@ const loginHandler = async () => {
     :disabled="!correct"
     @submit-form="loginHandler"
   >
-  <div class="flex flex-row justify-around">
-    <router-link to="/auth/register">还没账号？</router-link>
-    <router-link to="/auth/reset">忘记密码了？</router-link>
-  </div>
+    <div class="flex flex-row justify-around">
+      <router-link to="/auth/register">还没账号？</router-link>
+      <router-link to="/auth/reset">忘记密码了？</router-link>
+    </div>
   </FormContainer>
 </template>

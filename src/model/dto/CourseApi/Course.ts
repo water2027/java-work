@@ -10,5 +10,13 @@ export interface CourseReturn {
     id:number
     name:string
     description:string
-    chatRoom: ChatRoom
+    price:number
+    credits:number
+    teacherName:string
+    startDate:Date
+    endDate:Date
+    hasExam:boolean
+    examDate:Date
+    location:string
+    teachingSessions:number
 }

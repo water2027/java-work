@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { type PropType } from 'vue';
-import { type CourseInfo } from '@/model/CourseInfo';
+import { type CourseReturn } from '@/model/dto/CourseApi/Course';
 defineProps({
-  info: {
-    type: Object as PropType<CourseInfo>,
+  CourseInfo: {
+    type: Object as PropType<CourseReturn>,
     required: true,
   },
 });
@@ -11,18 +11,10 @@ defineProps({
 <template>
   <div
     class="relative flex flex-row bg-slate-400 p-4 py-8 m-2 shadow-md shadow-slate-700 before:content-['java大学'] before:absolute before:top-4 before:text-slate-500 before:opacity-80"
-    :style="
-      info.backgroundImage
-        ? {
-            backgroundImage: `url(${info.backgroundImage})`,
-            objectFit: 'cover',
-          }
-        : {}
-    "
   >
     <div class="w-[90%] flex flex-col *:my-2 *:w-full">
       <h2>
-        {{ info.name }}
+        {{ CourseInfo.name }}
       </h2>
       <div class="*:flex *:flex-row *:mx-4 flex flex-row">
         <div>
@@ -55,7 +47,7 @@ defineProps({
               stroke-linejoin="round"
             />
           </svg>
-          <span>{{ info.teacher }}</span>
+          <span>{{ CourseInfo.teacherName }}</span>
         </div>
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
@@ -67,7 +59,7 @@ defineProps({
               />
             </g>
           </svg>
-          <span>{{ info.score }}学分</span>
+          <span>{{ CourseInfo.credits }}学分</span>
         </div>
         <div>
           <svg
@@ -84,10 +76,10 @@ defineProps({
               d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
             />
           </svg>
-          <span>{{ info.isExam ? '考试' : '考核' }}</span>
-          <time :datetime="info.examTime?.toISOString()" v-if="info.isExam">{{
-            info.examTime?.toLocaleDateString()
-          }}</time>
+          <span>{{ CourseInfo.hasExam ? '考试' : '考核' }}</span>
+          <time v-if="CourseInfo.hasExam" :datetime="new Date(CourseInfo.examDate)?.toISOString()">
+          {{new Date(CourseInfo.examDate)?.toLocaleDateString()}}
+          </time>
         </div>
       </div>
       <div class="flex flex-row">
@@ -105,9 +97,9 @@ defineProps({
             d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
           />
         </svg>
-        <time :datetime="info.start.toISOString()">
-          {{ info.start.toLocaleDateString() }} -
-          {{ info.end.toLocaleDateString() }}
+        <time :datetime="new Date(CourseInfo.startDate).toISOString()">
+          {{ new Date(CourseInfo.startDate).toLocaleDateString() }} -
+          {{ new Date(CourseInfo.startDate).toLocaleDateString() }}
         </time>
       </div>
       <div class="flex flex-row">
@@ -124,11 +116,11 @@ defineProps({
             />
           </g>
         </svg>
-        <span>{{ info.location }} | {{ info.time }}</span>
+        <span>{{ CourseInfo.location }} | {{ CourseInfo.teachingSessions }}节</span>
       </div>
     </div>
     <div class="min-h-32 w-[10%] text-center my-auto flex flex-col">
-      <RouterLink :to="'/course/' + info.id" class="text-slate-600"
+      <RouterLink :to="'/course/' + CourseInfo.id" class="text-slate-600"
         >加入</RouterLink
       >
       <a href="javascript:;" class="text-slate-600">收藏</a>

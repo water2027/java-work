@@ -23,8 +23,6 @@
         >关于我们</RouterLink
       >
     </div>
-    <KeepAlive>
-      <RouterView class="mt-5" />
-    </KeepAlive>
+    <RouterView class="mt-5" />
   </div>
 </template>
