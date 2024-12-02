@@ -1,15 +1,61 @@
 <script setup lang="ts">
-import { type User } from '@/store/userStore';
+import { type User } from '@/model/User';
 
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 import ContactsCard from '@/components/ContactsCard.vue';
+
+import { Stomp } from '@stomp/stompjs'
+import SockJS from 'sockjs-client'
+
+let stompClient: any = null
+
+const setupWebSocket = () => {
+  const socket = new SockJS('http://127.0.0.1:8080/ws/chat')
+  stompClient = Stomp.over(socket)
+
+  stompClient.connect({}, (frame: any) => {
+    console.log('Connected: ' + frame)
+    
+    // 订阅特定聊天室的消息
+    stompClient.subscribe('/topic/chat-room/1', (message: any) => {
+      const receivedMessage = JSON.parse(message.body)
+      console.log('Received message:', receivedMessage)
+    })
+  }, (error: any) => {
+    console.error('Connection error:', error)
+  })
+}
+
+// 发送消息的方法
+const sendMessage = (message: any) => {
+  if (stompClient && stompClient.connected) {
+    stompClient.send("/app/sendMessage", {}, JSON.stringify(message))
+  }
+}
+
+// 断开连接
+const disconnectWebSocket = () => {
+  if (stompClient) {
+    stompClient.disconnect()
+  }
+}
+
+onMounted(() => {
+  setupWebSocket()
+})
+onBeforeUnmount(() => {
+  disconnectWebSocket()
+})
 
 const user = ref<User>({
   email: '',
   username: 'www',
   profilePicture: '',
+  role:'学生'
 });
+
+
 </script>
 <template>
   <div class="w-3/4 h-full mx-auto mt-10 flex flex-row">
