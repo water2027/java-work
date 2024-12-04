@@ -1,7 +1,9 @@
-import { useRequest } from "../request";
+import { useRequest } from '../request';
 
-import { type CourseSend, type CourseReturn } from "@/model/dto/CourseApi/Course";
+import {
+  type CourseReturn,
+} from '@/model/dto/CourseApi/Course';
 
-export function GetByID(id:number) {
-    return useRequest<CourseReturn>(`/courses/${id}`)
+export function GetCourseByID(id: number) {
+  return useRequest<CourseReturn|null>(`/courses/${id}`);
 }

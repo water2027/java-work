@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 
 import { useFormExam } from '@/composables/FormExam';
 
-import { register } from '@/api/UserApi/Register';
+import { Register } from '@/api/UserApi/Register';
 
 import { type CustomFormData } from '@/model/CustomFormData';
 import {
@@ -71,7 +71,7 @@ const registerHandler = async () => {
     email: form.value[3].value,
     role: '学生',
   };
-  const { isLoading,err } = register(infoSend);
+  const { isLoading,err } = Register(infoSend);
   watch(isLoading,()=>{
     if (err.value) {
       alert(err.value);

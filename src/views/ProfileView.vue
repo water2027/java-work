@@ -2,16 +2,17 @@
 import { useUserStore } from '@/store/userStore'; // 引入 Pinia store
 
 const userStore = useUserStore(); // 获取 user store
-const { user, isLoggedIn } = userStore
+const { user } = userStore
 
 const logoutHandler = () => {
-  
+  localStorage.removeItem('token'); // 移除 token
+  window.location.reload(); // 刷新页面
 }
 </script>
 
 <template>
   <!-- 如果已登录，显示个人主页信息 -->
-  <div v-if="isLoggedIn" class="p-5 max-w-[600px] mx-auto text-center">
+  <div class="p-5 max-w-[600px] mx-auto text-center">
     <div class="bg-white p-5 rounded-lg shadow text-center mb-5">
       <!-- 头像，默认占位图 -->
       <img
@@ -34,13 +35,6 @@ const logoutHandler = () => {
     >
       退出登录
     </button>
-  </div>
-
-  <!-- 如果未登录，显示提示信息 -->
-  <div v-else class="text-center">
-    <p>您未登录，请先登录。</p>
-    <!-- 登录链接 -->
-    <router-link to="/auth/login" class="text-blue-600">去登录</router-link>
   </div>
 </template>
 

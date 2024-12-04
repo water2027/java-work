@@ -30,7 +30,7 @@ function useRequest<T>(
     requestInit.headers = headers;
   }
   try {
-    const response = fetch(apiBaseUrl + url, { ...requestInit })
+    fetch(apiBaseUrl + url, { ...requestInit })
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

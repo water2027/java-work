@@ -12,6 +12,9 @@ const router = createRouter({
           path: '',
           name: 'home',
           component: () => import('@/views/CoursesCenter.vue'),
+          meta:{
+            auth:true
+          }
         },
         {
           path: 'save',
@@ -42,7 +45,7 @@ const router = createRouter({
           name: 'community',
           component: () => import('@/views/CommunityView.vue'),
           meta:{
-            auth:false
+            auth:true
           }
         },
         {
@@ -50,7 +53,7 @@ const router = createRouter({
           name: 'chat',
           component: () => import('@/views/ChatView.vue'),
           meta:{
-            auth:false
+            auth:true
           }
         }
         
@@ -91,16 +94,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to,from,next)=>{
-  // if(to.meta.auth){
-  //   if(localStorage.getItem('token')){
-  //     next();
-  //   }else{
-  //     next({name:'login'});
-  //   }
-  // }else{
-  //   next();
-  // }
-  next();
+  if(to.meta.auth){
+    if(localStorage.getItem('token')){
+      next();
+    }else{
+      next('/auth/login');
+    }
+  }else{
+    next();
+  }
 })
 
 export default router;

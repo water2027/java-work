@@ -1,7 +1,7 @@
-import { useRequest } from "../request";
+import { useRequest } from '../request';
 
-import { type CourseReturn } from "@/model/dto/CourseApi/Course";
+import { type CourseReturn } from '@/model/dto/CourseApi/Course';
 
-export function GetAll() {
-    return useRequest<CourseReturn[]>('/courses')
+export function GetAllCourse() {
+  return useRequest<CourseReturn[]|null>('/courses');
 }

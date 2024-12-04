@@ -1,12 +1,16 @@
-import { useRequest } from "../request";
+import { useRequest } from '../request';
 
-import { type DeleteUserReturn } from "@/model/dto/UserApi/DeleteUser";
+import { type DeleteUserReturn } from '@/model/dto/UserApi/DeleteUser';
 
-export function deleteUser(id:number) {
-    return useRequest<DeleteUserReturn>(`/users/${id}`,{
-        method:'DELETE',
-        headers: {
-            'Content-Type':'application/json'
-        }
-    },true)
+export function DeleteUser(id: number) {
+  return useRequest<DeleteUserReturn|null>(
+    `/users/${id}`,
+    {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+    true
+  );
 }

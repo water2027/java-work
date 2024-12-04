@@ -2,9 +2,9 @@
 
 import CourseCard from '@/components/CourseCard.vue';
 
-import { GetAll } from '@/api/CourseApi/GetAll';
+import { GetAllCourse } from '@/api/CourseApi/GetAll';
 
-const { data, isLoading } = GetAll();
+const { data, isLoading } = GetAllCourse();
 
 </script>
 

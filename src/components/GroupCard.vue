@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { type PropType } from 'vue';
-import { type GroupInfo } from '@/model/GroupInfo';
+import { type ChatRoomReturn } from '@/model/dto/ChatRoomApi/ChatRoom';
 
 defineProps({
   groupInfo: {
-    type: Object as PropType<GroupInfo>,
+    type: Object as PropType<ChatRoomReturn>,
     required: true,
   },
 });
@@ -13,19 +13,19 @@ defineProps({
 <template>
   <div class="bg-white shadow-md rounded-lg p-6 w-full mx-auto flex flex-col">
     <h2 class="text-xl font-bold mb-2">{{ groupInfo.name }}</h2>
-    <p class="text-gray-600 mb-4">{{ groupInfo.description }}</p>
+    <!-- <p class="text-gray-600 mb-4">{{ groupInfo.description }}</p> -->
     
     <div class="flex items-center mb-2">
       <span class="font-semibold mr-2">Members:</span>
-      <span>{{ groupInfo.members }}</span>
+      <!-- <span>{{ groupInfo.members }}</span> -->
     </div>
     
-    <div class="flex items-center mb-2">
+    <!-- <div class="flex items-center mb-2">
       <span class="font-semibold mr-2">Created:</span>
-      <span>{{ new Date(groupInfo.created).toLocaleDateString() }}</span>
-    </div>
+      <span>{{ new Date(groupInfo.createdAt).toLocaleDateString() }}</span>
+    </div> -->
     
-    <div class="flex items-center mb-2">
+    <!-- <div class="flex items-center mb-2">
       <span class="font-semibold mr-2">Creator:</span>
       <div class="flex items-center">
         <img 
@@ -36,14 +36,8 @@ defineProps({
         />
         <span>{{ groupInfo.creator.username }}</span>
       </div>
-    </div>
+    </div> -->
     
-    <div class="flex items-center">
-      <span class="font-semibold mr-2">Status:</span>
-      <span>
-        {{ groupInfo.status === 1 ? 'Active' : 'Inactive' }}
-      </span>
-    </div>
     <div>
         <button>加入</button>
     </div>

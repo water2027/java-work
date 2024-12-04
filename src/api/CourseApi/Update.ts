@@ -1,13 +1,16 @@
-import { useRequest } from "../request";
+import { useRequest } from '../request';
 
-import { type CourseSend, type CourseReturn } from "@/model/dto/CourseApi/Course";
+import {
+  type CourseSend,
+  type CourseReturn,
+} from '@/model/dto/CourseApi/Course';
 
-export function Update(id:number, data:CourseSend){
-    return useRequest<CourseReturn>(`/courses/${id}`,{
-        method:'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
+export function UpdateCourse(id: number, data: CourseSend) {
+  return useRequest<CourseReturn|null>(`/courses/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
 }
