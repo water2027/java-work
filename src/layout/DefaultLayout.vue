@@ -1,4 +1,22 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { nextTick, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+
+const refresh = ref(false);
+
+watch(
+  () => route.path,
+  () => {
+    console.log('refresh');
+    refresh.value = !refresh.value;
+    nextTick(() => {
+      refresh.value = !refresh.value;
+    });
+  }
+);
+</script>
 <template>
   <div>
     <h1 class="w-full text-center">java大学</h1>
@@ -23,6 +41,13 @@
         >关于我们</RouterLink
       >
     </div>
-    <RouterView class="mt-5" />
+    <template v-if="!refresh">
+      <RouterView class="mt-5" />
+    </template>
+    <template v-else>
+      <div class="w-full h-[80vh] flex justify-center items-center">
+        <div class="text-4xl">Loading...</div>
+      </div>
+    </template>
   </div>
 </template>
