@@ -32,7 +32,7 @@ const router = createRouter({
             auth:false
           }
         },
-        { 
+        {
           path: 'profile',
           name: 'profile',
           component: () => import('@/views/ProfileView.vue'),
@@ -55,8 +55,15 @@ const router = createRouter({
           meta:{
             auth:true
           }
-        }
-        
+        },
+        {
+          path: 'video-chat',
+          name: 'video-chat',
+          component: () => import('@/views/VideoChat.vue'),
+          meta: {
+            auth: true,
+          },
+        },
       ],
     },
     {
