@@ -129,8 +129,13 @@ export default defineComponent({
         stompClient.value.publish({
           destination: `/app/send${
             type.charAt(0).toUpperCase() + type.slice(1)
-          }`,
-          body: JSON.stringify(data),
+          }`, // 这里是 sendOffer, sendAnswer, sendCandidate
+          body: JSON.stringify({
+            type,
+            sdp: data.offer ? data.offer.sdp : undefined, // 对于 offer 和 answer，直接传递 SDP
+            candidate: data.candidate ? data.candidate : undefined, // 对于 candidate，直接传递 ICE 候选
+            chatRoomId: data.chatRoomId,
+          }),
         });
       }
     };

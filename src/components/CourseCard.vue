@@ -120,8 +120,8 @@ defineProps({
       </div>
     </div>
     <div class="min-h-32 w-[10%] text-center my-auto flex flex-col">
-      <RouterLink :to="'/course/' + CourseInfo.id" class="text-slate-600"
-        >加入</RouterLink
+      <a href="javascript:;" class="text-slate-600"
+        >加入</a
       >
       <a href="javascript:;" class="text-slate-600">收藏</a>
     </div>
