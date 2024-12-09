@@ -1,12 +1,34 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+
+import { type CustomFormData } from '@/model/CustomFormData';
+
 import ContactsCard from '@/components/ContactsCard.vue';
 
 import { useUserStore } from '@/store/userStore';
 
 import { useEasyForm } from '@/composables/EasyForm';
 
+import { CreateChatRoom } from '@/api/ChatRoomApi/Create';
+
 const userStore = useUserStore();
 const { user } = userStore;
+
+const inputData:CustomFormData[] = [{
+  id: 'chatRoomName',
+  label: '聊天室名称',
+  value: '',
+  type: 'text',
+  autocomplete: 'off',
+}]
+const createChatRoom = () => {
+  useEasyForm(inputData,(id:number)=>{
+    CreateChatRoom({
+      name: inputData[0].value,
+      courseId: id,
+    })
+  });
+}
 </script>
 <template>
   <div class="w-3/4 h-full mx-auto mt-10 flex flex-row">
@@ -16,7 +38,7 @@ const { user } = userStore;
         :src="!!user.profilePicture ? '' : '/default-avatar.svg'"
         :alt="user.username"
       />
-      <span class="text-center my-5" @click="useEasyForm">+</span>
+      <span class="text-center my-5" @click="createChatRoom">+</span>
       <span class="text-center my-5">人</span>
       <span class="text-center my-5">群</span>
     </div>
