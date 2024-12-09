@@ -6,6 +6,7 @@ import { useUserStore } from '@/store/userStore';
 import { Client } from '@stomp/stompjs';
 
 import { GetAllMessage } from '@/api/MessageApi/GetAll';
+import { GetAllMember } from '@/api/ChatRoomMemberApi/GetAll';
 
 const { user } = useUserStore();
 
@@ -16,6 +17,9 @@ let client: Client | null = null;
 const messageText = ref('');
 const chatRoomId = ref<number>(Number(route.params.id));
 const { data: messages, isLoading } = GetAllMessage(chatRoomId.value);
+const { data: members } = GetAllMember(
+  chatRoomId.value
+);
 const messageContainer = ref<HTMLDivElement | null>(null);
 
 const scrollToBottom = () => {
@@ -27,7 +31,7 @@ const scrollToBottom = () => {
 const setupWebsocket = () => {
   if (!client || !client.connected) {
     client = new Client({
-      brokerURL: 'ws://127.0.0.1:8080/ws/chat', // WebSocket 服务器地址
+      brokerURL: 'ws://192.168.173.224:8080/ws/chat', // WebSocket 服务器地址
       onConnect: () => {
         console.log('Connected to WebSocket');
         client?.subscribe(
@@ -35,9 +39,9 @@ const setupWebsocket = () => {
           (message: any) => {
             const response = JSON.parse(message.body);
             messages.value?.push(response);
-            nextTick(()=>{
+            nextTick(() => {
               scrollToBottom();
-            })
+            });
           }
         );
       },
@@ -62,6 +66,11 @@ const sendMessage = () => {
   messageText.value = '';
 };
 
+const detail = ref(false);
+const showDetail = () => {
+  detail.value = !detail.value;
+};
+
 onMounted(() => {
   setupWebsocket();
 });
@@ -70,33 +79,46 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-  <div class="w-3/4 flex flex-col border border-slate-500 h-[80vh]">
-    <h2 class="text-center">{{ chatRoomId }}</h2>
-    <template v-if="!isLoading">
-      <div ref="messageContainer" class="h-[70vh] overflow-auto">
-        <div
-          v-for="message in messages"
-          :key="message.id"
-          class="flex flex-col p-4 border-b border-gray-200"
-        >
-          <h3 class="text-lg font-bold">{{ message.userId }}</h3>
-          <div class="mt-2 text-base">{{ message.content }}</div>
-          <div class="mt-2 text-sm text-gray-500">{{ message.createdAt }}</div>
+  <div class="flex flex-row w-full">
+    <div class="w-full flex flex-col border border-slate-500 h-[80vh]">
+      <div class="flex flex-row justify-center">
+        <h2 class="text-center ml-auto">{{ chatRoomId }}</h2>
+        <span class="ml-auto mr-4" @click="showDetail">...</span>
+      </div>
+      <template v-if="!isLoading">
+        <div ref="messageContainer" class="h-[70vh] overflow-auto">
+          <div
+            v-for="message in messages"
+            :key="message.id"
+            class="flex flex-col p-4 border-b border-gray-200"
+          >
+            <h3 class="text-lg font-bold">{{ message.userId }}</h3>
+            <div class="mt-2 text-base">{{ message.content }}</div>
+            <div class="mt-2 text-sm text-gray-500">
+              {{ message.createdAt }}
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="h-[10vh] w-full bg-slate-500">
-        <textarea
-          v-model="messageText"
-          class="h-full w-full border border-slate-900"
-        ></textarea>
-        <button @click="sendMessage">发送</button>
-      </div>
-    </template>
-    <template v-else>
-      <div class="h-[80vh] flex justify-center items-center">
-        <div class="spinner"></div>
-      </div>
-    </template>
+        <div class="h-[10vh] w-full bg-slate-500">
+          <textarea
+            v-model="messageText"
+            class="h-full w-full border border-slate-900"
+          ></textarea>
+          <button @click="sendMessage">发送</button>
+        </div>
+      </template>
+      <template v-else>
+        <div class="h-[80vh] flex justify-center items-center">
+          <div class="spinner"></div>
+        </div>
+      </template>
+    </div>
+    <div
+      v-if="detail"
+      class="flex flex-col border-slate-500 h-[80vh] overflow-auto"
+    >
+      <ContactsCard v-for="member in members" :key="member.id" :user="member" />
+    </div>
   </div>
 </template>
 <style scoped>

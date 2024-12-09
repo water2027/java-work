@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
 import { type CustomFormData } from '@/model/CustomFormData';
 
 import ContactsCard from '@/components/ContactsCard.vue';
