@@ -27,6 +27,16 @@ const createChatRoom = () => {
     })
   });
 }
+const addFriendData:CustomFormData[] = [{
+  id: 'friendId',
+  label: 'friendId',
+  value: '',
+  type: 'number',
+  autocomplete: 'off',
+}]
+const addFriend = () => {
+
+}
 </script>
 <template>
   <div class="w-3/4 h-full mx-auto mt-10 flex flex-row">
@@ -36,6 +46,7 @@ const createChatRoom = () => {
         :src="!!user.profilePicture ? '' : '/default-avatar.svg'"
         :alt="user.username"
       />
+      <span class="text-center my-5" @click="addFriend">+</span>
       <span class="text-center my-5" @click="createChatRoom">+</span>
       <span class="text-center my-5">人</span>
       <span class="text-center my-5">群</span>

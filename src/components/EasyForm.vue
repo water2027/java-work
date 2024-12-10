@@ -44,9 +44,9 @@ const submit = () => {
 
 <template>
   <div
-    class="absolute z-10 w-[30vw] h-auto top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-600 p-10"
+    class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center items-center"
   >
-    <form @submit.prevent="submit">
+    <form class="z-10 w-[30vw] h-auto top-1/2 left-1/2 bg-slate-600 p-10" @submit.prevent="submit">
       <FormInput
         v-for="item in inputData"
         :key="item.id"

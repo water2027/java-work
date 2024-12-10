@@ -28,10 +28,12 @@ const scrollToBottom = () => {
   }
 };
 
+const apiUrl = import.meta.env.VITE_API_BASE_URL
+
 const setupWebsocket = () => {
   if (!client || !client.connected) {
     client = new Client({
-      brokerURL: 'ws://192.168.173.224:8080/ws/chat', // WebSocket 服务器地址
+      brokerURL: `ws://${apiUrl}/ws/chat`, // WebSocket 服务器地址
       onConnect: () => {
         console.log('Connected to WebSocket');
         client?.subscribe(

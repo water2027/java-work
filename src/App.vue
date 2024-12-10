@@ -10,23 +10,21 @@ onMounted(() => {
       email: email,
       password: password,
     });
-    watch(isLoading,()=>{
-      if(err.value){
+    watch(isLoading, () => {
+      if (err.value) {
         console.log(err);
-      }else{
-        if(!isLoading.value){
-          if(data.value?.token){
+      } else {
+        if (!isLoading.value) {
+          if (data.value?.token) {
             localStorage.setItem('token', data.value.token);
           }
         }
       }
-    })
+    });
   }
 });
 window.addEventListener('beforeunload', () => {
-  if (localStorage.getItem('rememberMe') === 'false') {
-    localStorage.removeItem('token');
-  }
+  localStorage.removeItem('token');
 });
 </script>
 
