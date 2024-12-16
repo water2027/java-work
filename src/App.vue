@@ -31,5 +31,6 @@ window.addEventListener('beforeunload', () => {
 <template>
   <div>
     <RouterView />
+    <el-button>asd</el-button>
   </div>
 </template>
