@@ -14,8 +14,10 @@ const router = createRouter({
           component: () => import('@/views/CoursesCenter.vue'),
           meta:{
             auth:true
+
           }
         },
+
         {
           path: 'save',
           name: 'save',
@@ -62,6 +64,15 @@ const router = createRouter({
           ],
           meta:{
             auth:true
+          }
+        },
+        {
+          path: 'post',
+          name: 'post',
+          component: () => import('@/views/Post.vue'),
+          meta:{
+            auth:true
+
           }
         },
       ],

@@ -34,6 +34,9 @@ watch(
       <RouterLink to="/chat" class="p-2 hover:bg-slate-500 rounded-lg"
         >来聊天吧</RouterLink
       >
+      <RouterLink to="/post" class="p-2 hover:bg-slate-500 rounded-lg"
+        >哈哈贴吧</RouterLink
+      >
       <RouterLink to="/save" class="p-2 hover:bg-slate-500 rounded-lg"
         >我的收藏</RouterLink
       >
