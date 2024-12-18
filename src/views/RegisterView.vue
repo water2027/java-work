@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import { useFormExam } from '@/composables/FormExam';
 
 import { Register } from '@/api/UserApi/Register';
+import { SendCode } from '@/api/UserApi/SendCode'
 
 import { type CustomFormData } from '@/model/CustomFormData';
 import {
@@ -15,6 +16,8 @@ import {
 import FormContainer from '@/components/FormContainer.vue';
 
 const router = useRouter();
+
+const realCode = ref<string>('');
 
 const form = ref<CustomFormData[]>([
   {
@@ -65,6 +68,10 @@ const emailCorrect = computed(() => {
 });
 
 const registerHandler = async () => {
+  if(form.value[4].value !== realCode.value){
+    alert('验证码错误');
+    return;
+  }
   const infoSend: RegisterSend = {
     username: form.value[0].value,
     password: form.value[1].value,
@@ -83,6 +90,17 @@ const registerHandler = async () => {
 
 const sendVerificationCode = () => {
   console.log('发送验证码');
+  const email = form.value[3].value;
+  // 随机生成验证码
+  const code = Math.floor(Math.random() * 1000000);
+  const { isLoading, err } = SendCode(email,'验证码',`您的验证码是${code}`);
+  watch(isLoading,()=>{
+    if (err.value) {
+      alert(err.value);
+    }else{
+      realCode.value = code.toString();
+    }
+  })
 };
 </script>
 <template>
