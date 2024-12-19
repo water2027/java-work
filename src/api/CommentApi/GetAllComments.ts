@@ -12,5 +12,5 @@ export function GetAllComments() {
     headers: {
       'Content-Type': 'application/json',
     },
-  }, false);
+  });
 }

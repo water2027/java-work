@@ -12,5 +12,5 @@ export function DeleteCommentsByPostId(postId: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  }, false);
+  });
 }

@@ -16,7 +16,6 @@ export function CreateComment(data: CommentSend) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    },
-    false // 根据你的useRequest实现决定是否需要这个参数
+    } // 根据你的useRequest实现决定是否需要这个参数
   );
 }

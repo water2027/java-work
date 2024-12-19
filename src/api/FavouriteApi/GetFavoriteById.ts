@@ -13,5 +13,5 @@ export function GetFavoriteById(id: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  }, false);
+  });
 }

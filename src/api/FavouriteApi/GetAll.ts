@@ -12,5 +12,5 @@ export function GetAllFavorites() {
     headers: {
       'Content-Type': 'application/json',
     },
-  }, false);
+  });
 }

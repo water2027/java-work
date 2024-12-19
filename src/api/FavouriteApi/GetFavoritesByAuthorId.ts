@@ -13,5 +13,5 @@ export function GetFavoritesByAuthorId(authorId: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  }, false);
+  });
 }

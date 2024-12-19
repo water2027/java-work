@@ -16,7 +16,6 @@ export function CreatePost(data: PostSend) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    },
-    false
+    }
   );
 }

@@ -13,5 +13,5 @@ export function GetCommentsByPostId(postId: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  }, false);
+  });
 }
