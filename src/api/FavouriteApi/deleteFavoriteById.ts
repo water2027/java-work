@@ -12,5 +12,5 @@ export function DeleteFavoriteById(id: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  }, false);
+  });
 }

@@ -13,5 +13,5 @@ export function GetCommentsByAuthorId(userId: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  }, false);
+  });
 }

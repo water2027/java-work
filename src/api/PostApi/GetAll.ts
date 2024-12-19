@@ -13,5 +13,5 @@ export function GetAllPosts() {
       'Content-Type': 'application/json',
     },
   },
-  false);
+  );
 }

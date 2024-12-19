@@ -12,7 +12,6 @@ export function DeletePost(id: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  },
-  false
+  }
   );
 }

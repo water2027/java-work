@@ -13,6 +13,5 @@ export function GetPostById(id: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  },
-  false);
+  });
 }

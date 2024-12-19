@@ -12,5 +12,5 @@ export function DeleteComment(id: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  }, false);
+  });
 }

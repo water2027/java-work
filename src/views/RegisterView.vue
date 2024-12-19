@@ -70,7 +70,7 @@ const emailCorrect = computed(() => {
 const registerHandler = async () => {
   if(form.value[4].value !== realCode.value){
     alert('验证码错误');
-    return;
+    // return;
   }
   const infoSend: RegisterSend = {
     username: form.value[0].value,

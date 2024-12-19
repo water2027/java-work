@@ -13,6 +13,5 @@ export function GetPostsByUser(userId: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  },
-  false);
+  });
 }

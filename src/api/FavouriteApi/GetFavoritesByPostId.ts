@@ -13,5 +13,5 @@ export function GetFavoritesByPostId(postId: number) {
     headers: {
       'Content-Type': 'application/json',
     },
-  }, false);
+  });
 }
