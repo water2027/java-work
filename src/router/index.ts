@@ -6,7 +6,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'default',
-      component: () => import('@/layout/DefaultLayout.vue'),
+      component: () => import('@/Layout/DefaultLayout.vue'),
       children: [
         {
           path: '',
@@ -80,7 +80,7 @@ const router = createRouter({
     {
       path: '/auth',
       name: 'auth',
-      component: () => import('@/layout/AuthLayout.vue'),
+      component: () => import('@/Layout/AuthLayout.vue'),
       children: [
         {
           path: 'login',
