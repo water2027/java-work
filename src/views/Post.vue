@@ -1,14 +1,19 @@
 <template>
   <div class="posts-container">
     <!-- 使用 v-if 确保 posts 已经加载完成 -->
-    <el-card v-for="post in posts" :key="post.id" shadow="hover" v-if="!isLoading">
+    <el-card v-for="post in posts" :key="post.id" shadow="hover" v-if="!isLoading" class="post-card">
       <div slot="header" class="clearfix">
-        <span>{{ getAuthorName(post.authorId) }}</span>
+        <span>{{ post.authorName }}</span>
         <span style="margin-left: 10px; color: #99a9bf">{{ post.createdAt }}</span>
       </div>
       <div class="post-content">
         <h3>{{ post.title }}</h3>
         <p>{{ post.content }}</p>
+      </div>
+      <div class="post-meta">
+        <!-- 显示评论和收藏数量 -->
+        <span>💬 {{ post.comments?.length||0 }}</span>
+        <span>❤️ {{ post.likes?.length||0 }}</span>
       </div>
     </el-card>
     <!-- 如果帖子正在加载或加载失败，显示相应消息 -->
@@ -21,51 +26,62 @@ import { ref, onMounted, watch } from 'vue';
 import { GetAllPosts } from '@/api/PostApi/GetAll';
 import { showMsg } from '@/components/MessageBox';
 import { GetUserByID } from '@/api/UserApi/GetByID';
+import { GetFavoritesByPostId } from '@/api/FavouriteApi/GetFavoritesByPostId';
+import { GetCommentsByPostId } from '@/api/CommentApi/GetCommentsByPostId';
 
 // 定义响应式变量
 const userCache = ref({}); // 用户信息缓存
+const commentCounts = ref({}); // 每个帖子的评论数量缓存
+const favoriteCounts = ref({}); // 每个帖子的收藏数量缓存
+
+// interface postInfo {
+
+// }
 
 // 获取所有帖子的方法
 const { data: posts, isLoading, err } = GetAllPosts();
 
 watch(isLoading, async () => {
   if (!err.value) {
-    await fetchUsers();
-  }else{
+    fetchPostInfo()
+  } else {
     showMsg(err.value)
   }
 })
 
+const fetchPostInfo = () => {
+  for (let i = 0; i < posts.value.length; ++i) {
+    const { data: authorInfo, isLoading: authorIsLoading, err: authorErr } = GetUserByID(posts.value[i].authorId)
+    watch(authorIsLoading, () => {
+      if (!authorErr.value) {
+        posts.value[i].authorName = authorInfo.value.username
+      } else {
+        showMsg(authorErr.value)
+      }
+    })
+    const { data: comments, isLoading: commentIsLoading, err: commentErr } = GetCommentsByPostId(posts.value[i].id)
+    watch(commentIsLoading, () => {
+      if (!commentErr.value) {
+        posts.value[i].comments = comments.value
+      } else {
+        showMsg(commentErr.value)
+      }
+    })
+    const { data: likes, isLoading: likeIsLoading, err: likeErr } = GetFavoritesByPostId(posts.value[i].id)
+    watch(likeIsLoading, () => {
+      if (!likeErr.value) {
+        posts.value[i].likes = likes.value
+      } else {
+        showMsg(likeErr.value)
+      }
+    })
 
-// 批量获取用户信息的方法
-async function fetchUsers() {
-  // 获取所有帖子的作者 ID 并去重
-  const authorIds = [...new Set(posts.value.map(post => post.authorId))];
-
-  // 批量获取所有作者信息
-  await Promise.all(authorIds.map(async id => {
-    try {
-      const { data: userInfo, isLoading, err } = await GetUserByID(id); // 假设 GetUserByID 返回 useRequest 的结果
-      watch(isLoading, ()=>{
-        if(err.value){
-          showMsg(err.value)
-        }else{
-          userCache.value[id] = userInfo.value.username;
-        }
-      })
-    } catch (error) {
-      console.error('Failed to fetch user info:', error);
-      userCache.value[id] = 'Unknown User';
-    }
-  }));
+  }
 }
 
-// 获取作者名称的方法
-function getAuthorName(authorId) {
-  return userCache.value[authorId] || 'Unknown User';
-}
 
 </script>
+
 
 <style scoped>
 .posts-container {
@@ -74,7 +90,81 @@ function getAuthorName(authorId) {
   gap: 20px;
 }
 
+.post-card {
+  position: relative;
+  /* 确保 .post-meta 能够相对于卡片定位 */
+  background: linear-gradient(180deg, #E5E5E5, #FFFFFF);
+  /* 银灰色到白色的渐变 */
+  border-radius: 8px;
+  /* 圆角 */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  /* 悬浮阴影 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  /* 过渡效果，包括背景渐变变化 */
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+  /* 鼠标悬停时稍微上移 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  /* 更强的阴影 */
+  background: linear-gradient(180deg, #F0F0F0, #FFFFFF);
+  /* 修改悬停时的渐变 */
+}
+
+.clearfix {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ebebeb;
+  /* 分隔线 */
+}
+
 .post-content {
-  padding: 10px;
+  padding: 20px;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.post-content h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.post-content p {
+  color: #666;
+}
+
+.post-meta {
+  position: absolute;
+  /* 绝对定位 */
+  bottom: 10px;
+  /* 距离卡片底部10px */
+  right: 15px;
+  /* 改为距离卡片右边15px */
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  /* 使用flex布局 */
+  align-items: center;
+  /* 垂直居中 */
+  gap: 10px;
+  /* emoji 和文本之间的间距 */
+}
+
+/* 样式化 emoji 图标 */
+.post-meta span {
+  display: flex;
+  align-items: center;
+}
+
+.post-meta span::before {
+  content: attr(data-icon);
+  /* 使用 data-icon 属性动态设置图标 */
+  font-size: 1.2em;
+  /* 增大图标 */
+  margin-right: 5px;
+  /* 在图标和数字之间添加一点间距 */
+  vertical-align: middle;
+  /* 确保图标和文本垂直居中对齐 */
 }
 </style>
