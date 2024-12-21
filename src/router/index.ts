@@ -67,6 +67,31 @@ const router = createRouter({
           }
         },
         {
+          path: 'friend',
+          name: 'friend',
+          component: () => import('@/views/FriendView.vue'),
+          children:[
+            {
+              path: '',
+              name: 'friendList',
+              component: () => import('@/views/FriendListView.vue')
+            },
+            {
+              path : 'sent-request',
+              name: 'sentRequest',
+              component: () => import('@/views/FriendSentRequestView.vue')
+            },
+            {
+              path : 'received-request',
+              name: 'receivedRequest',
+              component: () => import('@/views/FriendReceivedRequestView.vue')
+            }
+          ],
+          meta:{
+            auth:true
+          }
+        },
+        {
           path: 'post',
           name: 'post',
           component: () => import('@/views/Post.vue'),
