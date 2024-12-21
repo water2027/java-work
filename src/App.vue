@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue';
 
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
 import { Login } from './api/UserApi/Login';
 onMounted(() => {
   if (localStorage.getItem('rememberMe') === 'true') {
@@ -17,6 +21,7 @@ onMounted(() => {
         if (!isLoading.value) {
           if (data.value?.token) {
             localStorage.setItem('token', data.value.token);
+            router.push('/')
           }
         }
       }
