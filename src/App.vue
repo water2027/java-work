@@ -5,8 +5,6 @@ import { useUserStore } from './store/userStore';
 
 import { useRouter } from 'vue-router';
 
-import { useUserStore } from './store/userStore';
-
 const { setUser } = useUserStore();
 
 const router = useRouter()
