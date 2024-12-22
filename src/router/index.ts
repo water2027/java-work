@@ -67,42 +67,34 @@ const router = createRouter({
           }
         },
         {
-          path: '/postbar',
-          name: 'postbar',
-          component: () => import('@/views/PostBar.vue'), // 新的 PostBar 主页面
-          children: [
+          path: 'friend',
+          name: 'friend',
+          component: () => import('@/views/FriendView.vue'),
+          children:[
             {
-              path: '', // 默认子页面
-              name: 'post',
-              component: () => import('@/views/Post.vue'),
-              meta: { auth: true }
+              path: '',
+              name: 'friendList',
+              component: () => import('@/views/FriendListView.vue')
             },
             {
-              path: 'myhistory',
-              name: 'myhistory',
-              component: () => import('@/views/MyHistory.vue'),
-              meta: { auth: true }
+              path : 'sent-request',
+              name: 'sentRequest',
+              component: () => import('@/views/FriendSentRequestView.vue')
             },
             {
-              path: 'myfavorite',
-              name: 'myfavorite',
-              component: () => import('@/views/MyFavorite.vue'),
-              meta: { auth: true }
-            },
-            {
-              path: 'createpost',
-              name: 'createpost',
-              component: () => import('@/views/CreatePost.vue'),
-              meta: { auth: true }
+              path : 'received-request',
+              name: 'receivedRequest',
+              component: () => import('@/views/FriendReceivedRequestView.vue')
             }
           ],
-          meta: { auth: true }
+          meta:{
+            auth:true
+          }
         },
         {
-          path: 'postcontent/:id',
-          name: 'postcontent',
-          component: () => import('@/views/PostContent.vue'),
-          props:true,
+          path: 'post',
+          name: 'post',
+          component: () => import('@/views/Post.vue'),
           meta:{
             auth:true
           }
