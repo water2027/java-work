@@ -1,25 +1,10 @@
 <template>
   <div class="posts-container">
     <!-- 使用 v-if 确保 posts 已经加载完成 -->
-<<<<<<< HEAD
-    <el-card
-      v-for="post in posts"
-      :key="post.id"
-      shadow="hover"
-      v-if="!isLoading"
-      class="post-card"
-    >
-      <div slot="header" class="clearfix">
-        <span>{{ post.authorName }}</span>
-        <span style="margin-left: 10px; color: #99a9bf">{{
-          post.createdAt
-        }}</span>
-=======
     <el-card v-for="post in posts" :key="post.id" shadow="hover" v-if="!isLoading" class="post-card"  @click="goToPost(post.id)" >
       <div slot="header" class="clearfix">
         <span>{{ post.authorName }}</span> <!-- 显示帖子作者的名字 -->
         <span style="margin-left: 10px; color: #99a9bf">{{ post.createdAt }}</span> <!-- 显示帖子创建时间 -->
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
       </div>
       <div class="post-content">
         <h3>{{ post.title }}</h3> <!-- 显示帖子标题 -->
@@ -27,13 +12,8 @@
       </div>
       <div class="post-meta">
         <!-- 显示评论和收藏数量 -->
-<<<<<<< HEAD
-        <span>💬 {{ post.comments?.length || 0 }}</span>
-        <span>❤️ {{ post.likes?.length || 0 }}</span>
-=======
         <span>💬 {{ post.comments?.length || 0 }}</span> <!-- 显示评论数量 -->
         <span>❤️ {{ post.likes?.length || 0 }}</span> <!-- 显示收藏（喜欢）数量 -->
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
       </div>
     </el-card>
     <!-- 如果帖子正在加载或加载失败，显示相应消息 -->
@@ -63,67 +43,15 @@ const { data: posts, isLoading, err } = GetAllPosts();
 // 监听加载状态的变化
 watch(isLoading, async () => {
   if (!err.value) {
-<<<<<<< HEAD
-    fetchPostInfo();
-  } else {
-    showMsg(err.value);
-=======
     await fetchPostInfo(); // 加载成功后获取帖子的附加信息
   } else {
     showMsg(err.value); // 如果加载失败，显示错误信息
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
   }
 });
 
 // 获取帖子附加信息的方法
 const fetchPostInfo = async () => {
   for (let i = 0; i < posts.value.length; ++i) {
-<<<<<<< HEAD
-    const {
-      data: authorInfo,
-      isLoading: authorIsLoading,
-      err: authorErr,
-    } = GetUserByID(posts.value[i].authorId);
-
-    watch(authorIsLoading, () => {
-      if (!authorErr.value) {
-        posts.value[i].authorName = authorInfo.value.username;
-      } else {
-        showMsg(authorErr.value);
-      }
-    });
-
-    const {
-      data: comments,
-      isLoading: commentIsLoading,
-      err: commentErr,
-    } = GetCommentsByPostId(posts.value[i].id);
-
-    watch(commentIsLoading, () => {
-      if (!commentErr.value) {
-        posts.value[i].comments = comments.value;
-      } else {
-        showMsg(commentErr.value);
-      }
-    });
-
-    const {
-      data: likes,
-      isLoading: likeIsLoading,
-      err: likeErr,
-    } = GetFavoritesByPostId(posts.value[i].id);
-
-    watch(likeIsLoading, () => {
-      if (!likeErr.value) {
-        posts.value[i].likes = likes.value;
-      } else {
-        showMsg(likeErr.value);
-      }
-    });
-    
-  }
-};
-=======
     const postId = posts.value[i].id;
 
     // 获取作者信息
@@ -162,7 +90,6 @@ const fetchPostInfo = async () => {
 const goToPost = (postId) => {
   router.push(`/postcontent/${postId}`);
 };
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
 </script>
 
 <style scoped>
@@ -174,27 +101,6 @@ const goToPost = (postId) => {
 }
 
 .post-card {
-<<<<<<< HEAD
-  position: relative;
-  /* 确保 .post-meta 能够相对于卡片定位 */
-  background: linear-gradient(180deg, #e5e5e5, #ffffff);
-  /* 银灰色到白色的渐变 */
-  border-radius: 8px;
-  /* 圆角 */
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  /* 悬浮阴影 */
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-  /* 过渡效果，包括背景渐变变化 */
-}
-
-.post-card:hover {
-  transform: translateY(-5px);
-  /* 鼠标悬停时稍微上移 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  /* 更强的阴影 */
-  background: linear-gradient(180deg, #f0f0f0, #ffffff);
-  /* 修改悬停时的渐变 */
-=======
   position: relative; /* 确保 .post-meta 能够相对于卡片定位 */
   background: linear-gradient(180deg, #E5E5E5, #FFFFFF); /* 银灰色到白色的渐变背景 */
   border-radius: 8px; /* 圆角 */
@@ -206,7 +112,6 @@ const goToPost = (postId) => {
   transform: translateY(-5px); /* 鼠标悬停时稍微上移 */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 更强的阴影 */
   background: linear-gradient(180deg, #F0F0F0, #FFFFFF); /* 修改悬停时的渐变 */
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
 }
 
 .clearfix {

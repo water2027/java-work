@@ -51,7 +51,7 @@ const getUserById = (id: number) => {
   return response;
 };
 
-const user = ref<UserInfo>({
+const user = ref<User>({
   id: 0,
   username: '',
   email: '',
