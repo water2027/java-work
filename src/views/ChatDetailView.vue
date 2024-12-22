@@ -58,7 +58,7 @@ const apiUrl = import.meta.env.VITE_API_BASE_URL;
 const setupWebsocket = () => {
   if (!client || !client.connected) {
     client = new Client({
-      brokerURL: `ws://${apiUrl}/ws/chat`, // WebSocket 服务器地址
+      brokerURL: `wss://${apiUrl}/ws/chat`, // WebSocket 服务器地址
       onConnect: () => {
         console.log('Connected to WebSocket');
         client?.subscribe(

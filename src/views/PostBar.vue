@@ -23,10 +23,26 @@ watch(
     <!-- 竖直的菜单栏 -->
     <aside class="sidebar">
       <ul class="menu">
-        <li><RouterLink to="/postbar" exact-active-class="active">看看所有</RouterLink></li>
-        <li><RouterLink to="/postbar/myhistory" active-class="active">我的历史</RouterLink></li>
-        <li><RouterLink to="/postbar/myfavorite" active-class="active">我的收藏</RouterLink></li>
-        <li><RouterLink to="/postbar/createpost" active-class="active">我发一个</RouterLink></li>
+        <li>
+          <RouterLink to="/postbar" exact-active-class="active"
+            >看看所有</RouterLink
+          >
+        </li>
+        <li>
+          <RouterLink to="/postbar/myhistory" active-class="active"
+            >我的历史</RouterLink
+          >
+        </li>
+        <li>
+          <RouterLink to="/postbar/myfavorite" active-class="active"
+            >我的收藏</RouterLink
+          >
+        </li>
+        <li>
+          <RouterLink to="/postbar/createpost" active-class="active"
+            >我发一个</RouterLink
+          >
+        </li>
       </ul>
     </aside>
 

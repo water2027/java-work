@@ -29,7 +29,7 @@ function useRequest<T>(
     headers.set('Authorization', `Bearer ${token}`);
     requestInit.headers = headers;
   }
-  fetch('http://' + apiBaseUrl + url, { ...requestInit })
+  fetch('https://' + apiBaseUrl + url, { ...requestInit })
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
