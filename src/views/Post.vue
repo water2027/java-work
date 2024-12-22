@@ -20,13 +20,8 @@
       </div>
       <div class="post-meta">
         <!-- 显示评论和收藏数量 -->
-<<<<<<< HEAD
         <span>💬 {{ post.comments?.length || 0 }}</span>
         <span>❤️ {{ post.likes?.length || 0 }}</span>
-=======
-        <span>💬 {{ post.comments?.length || 0 }}</span> <!-- 显示评论数量 -->
-        <span>❤️ {{ post.likes?.length || 0 }}</span> <!-- 显示收藏（喜欢）数量 -->
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
       </div>
     </el-card>
     <!-- 如果帖子正在加载或加载失败，显示相应消息 -->
