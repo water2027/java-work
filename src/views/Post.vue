@@ -1,10 +1,18 @@
 <template>
   <div class="posts-container">
     <!-- 使用 v-if 确保 posts 已经加载完成 -->
-    <el-card v-for="post in posts" :key="post.id" shadow="hover" v-if="!isLoading" class="post-card">
+    <el-card
+      v-for="post in posts"
+      :key="post.id"
+      shadow="hover"
+      v-if="!isLoading"
+      class="post-card"
+    >
       <div slot="header" class="clearfix">
         <span>{{ post.authorName }}</span>
-        <span style="margin-left: 10px; color: #99a9bf">{{ post.createdAt }}</span>
+        <span style="margin-left: 10px; color: #99a9bf">{{
+          post.createdAt
+        }}</span>
       </div>
       <div class="post-content">
         <h3>{{ post.title }}</h3>
@@ -12,8 +20,8 @@
       </div>
       <div class="post-meta">
         <!-- 显示评论和收藏数量 -->
-        <span>💬 {{ post.comments?.length||0 }}</span>
-        <span>❤️ {{ post.likes?.length||0 }}</span>
+        <span>💬 {{ post.comments?.length || 0 }}</span>
+        <span>❤️ {{ post.likes?.length || 0 }}</span>
       </div>
     </el-card>
     <!-- 如果帖子正在加载或加载失败，显示相应消息 -->
@@ -43,45 +51,59 @@ const { data: posts, isLoading, err } = GetAllPosts();
 
 watch(isLoading, async () => {
   if (!err.value) {
-    fetchPostInfo()
+    fetchPostInfo();
   } else {
-    showMsg(err.value)
+    showMsg(err.value);
   }
-})
+});
 
 const fetchPostInfo = () => {
   for (let i = 0; i < posts.value.length; ++i) {
-    const { data: authorInfo, isLoading: authorIsLoading, err: authorErr } = GetUserByID(posts.value[i].authorId)
+    const {
+      data: authorInfo,
+      isLoading: authorIsLoading,
+      err: authorErr,
+    } = GetUserByID(posts.value[i].authorId);
+
     watch(authorIsLoading, () => {
       if (!authorErr.value) {
-        posts.value[i].authorName = authorInfo.value.username
+        posts.value[i].authorName = authorInfo.value.username;
       } else {
-        showMsg(authorErr.value)
+        showMsg(authorErr.value);
       }
-    })
-    const { data: comments, isLoading: commentIsLoading, err: commentErr } = GetCommentsByPostId(posts.value[i].id)
+    });
+
+    const {
+      data: comments,
+      isLoading: commentIsLoading,
+      err: commentErr,
+    } = GetCommentsByPostId(posts.value[i].id);
+
     watch(commentIsLoading, () => {
       if (!commentErr.value) {
-        posts.value[i].comments = comments.value
+        posts.value[i].comments = comments.value;
       } else {
-        showMsg(commentErr.value)
+        showMsg(commentErr.value);
       }
-    })
-    const { data: likes, isLoading: likeIsLoading, err: likeErr } = GetFavoritesByPostId(posts.value[i].id)
+    });
+
+    const {
+      data: likes,
+      isLoading: likeIsLoading,
+      err: likeErr,
+    } = GetFavoritesByPostId(posts.value[i].id);
+
     watch(likeIsLoading, () => {
       if (!likeErr.value) {
-        posts.value[i].likes = likes.value
+        posts.value[i].likes = likes.value;
       } else {
-        showMsg(likeErr.value)
+        showMsg(likeErr.value);
       }
-    })
-
+    });
+    
   }
-}
-
-
+};
 </script>
-
 
 <style scoped>
 .posts-container {
@@ -93,7 +115,7 @@ const fetchPostInfo = () => {
 .post-card {
   position: relative;
   /* 确保 .post-meta 能够相对于卡片定位 */
-  background: linear-gradient(180deg, #E5E5E5, #FFFFFF);
+  background: linear-gradient(180deg, #e5e5e5, #ffffff);
   /* 银灰色到白色的渐变 */
   border-radius: 8px;
   /* 圆角 */
@@ -108,7 +130,7 @@ const fetchPostInfo = () => {
   /* 鼠标悬停时稍微上移 */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   /* 更强的阴影 */
-  background: linear-gradient(180deg, #F0F0F0, #FFFFFF);
+  background: linear-gradient(180deg, #f0f0f0, #ffffff);
   /* 修改悬停时的渐变 */
 }
 

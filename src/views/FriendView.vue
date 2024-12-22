@@ -27,7 +27,28 @@
         <div class="toolbar">
           <span>🌟 欢迎来到好友管理中心 🌟</span>
         </div>
+        <div style="margin-left:auto; padding-right:20px;">
+          <el-button type="warning" round plain @click="dialogFormVisible = true">添加好友</el-button>
+        </div>
       </el-header>
+
+      <el-dialog v-model="dialogFormVisible" title="发送好友申请" width="500">
+
+        <el-form :model="form">
+          <el-form-item label="好友ID" :label-width="formLabelWidth">
+        <el-input v-model="form.friendId" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="申请说明" :label-width="formLabelWidth">
+        <el-input v-model="form.note" autocomplete="off" />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="() => {dialogFormVisible = false; confirmSendRequest() }">确认</el-button>
+          </div>
+        </template>
+      </el-dialog>
 
       <el-main>
         <RouterView />
@@ -38,11 +59,17 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
+import { useUserStore } from '@/store/userStore';
+import { SendFriendRequest } from '@/api/FriendShipApi/SendRequest';
+import { showMsg } from '@/components/MessageBox';
 
 const router = useRouter();
 const route = useRoute();
 const activeIndex = ref('');
+
+const { user } = useUserStore();
 
 const showFriendList = () => {
   activeIndex.value = '1-1';
@@ -57,6 +84,31 @@ const showFriendSentRequest = () => {
 const showFriendReceivedRequest = () => {
   activeIndex.value = '2-2';
   router.push('/friend/received-request');
+};
+
+const dialogFormVisible = ref(false);
+const form = ref({ friendId: '', note: '' });
+const formLabelWidth = '120px';
+
+const confirmSendRequest = async () => {
+  if (user.value.id === parseInt(form.value.friendId)) {
+    showMsg("不可以向自己发送好友申请");
+    return;
+  }
+
+  try {
+    await SendFriendRequest({
+      senderUserId: user.value.id,
+      receiverUserId: parseInt(form.value.friendId),
+      announcement: form.value.note,
+      status: "PENDING"
+    });
+
+    showMsg("已发送好友请求~");
+    form.value = { friendId: '', note: '' };
+  } catch (error) {
+    showMsg("请求失败")
+  }
 };
 
 onMounted(() => {

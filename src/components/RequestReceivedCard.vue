@@ -33,20 +33,41 @@ import { ref, watch } from 'vue';
 import { type User } from '@/model/User';
 import { type FriendRequestReturn } from '@/model/dto/FriendRequestApi/FriendRequest';
 import { type PropType } from 'vue';
+import { GetUserByID } from '@/api/UserApi/GetByID';
+import type { UserInfo } from '@/model/dto/UserApi/UserInfo';
+import { ApproveFriendRequest } from '@/api/FriendShipApi/ApproveRequest';
+import { showMsg } from './MessageBox';
+import { RejectFriendRequest } from '@/api/FriendShipApi/RejectRequest';
 
 const props = defineProps({
     request: {
         type: Object as PropType<FriendRequestReturn>,
         required: true
-    },
-    user: {
-        type: Object as PropType<User>,
-        required: true
     }
 });
 
+const getUserById = (id: number) => {
+  const response = GetUserByID(id);
+  return response;
+};
+
+const user = ref<UserInfo>({
+  id: 0,
+  username: '',
+  email: '',
+  role: '',
+  password: ''
+});
+
+const { data, isLoading, err } = getUserById(props.request.senderUserId);
+
+watch(() => data.value, (newData) => {
+  if (newData) {
+    user.value = newData;
+  }
+});
+
 const borderColor = ref(getBorderColor(props.request.status));
-const addedDate = ref(props.request.createdAt.toLocaleDateString());
 
 watch(() => props.request.status, (newStatus) => {
   borderColor.value = getBorderColor(newStatus);
@@ -65,12 +86,28 @@ function getBorderColor(status: string): string {
   }
 }
 
-function approveClick() {
+const approveClick = () => {
   console.log('Approve button clicked');
+  try {
+    ApproveFriendRequest(props.request.id);
+    props.request.status = "APPROVED";
+    showMsg("已同意该请求~");
+
+  } catch (error) {
+    showMsg("请求失败")
+  }
 }
 
 function rejectClick() {
   console.log('Reject button clicked');
+  try {
+    RejectFriendRequest(props.request.id);
+    props.request.status = "REJECTED";
+    showMsg("已拒绝该请求~");
+
+  } catch (error) {
+    showMsg("请求失败")
+  }
 }
 
 </script>

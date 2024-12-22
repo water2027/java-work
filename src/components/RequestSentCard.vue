@@ -33,16 +33,35 @@ import { ref, watch } from 'vue';
 import { type User } from '@/model/User';
 import { type FriendRequestReturn } from '@/model/dto/FriendRequestApi/FriendRequest';
 import { type PropType } from 'vue';
+import { type UserInfo } from '@/model/dto/UserApi/UserInfo';
+import { GetUserByID } from '@/api/UserApi/GetByID';
 
 const props = defineProps({
     request: {
         type: Object as PropType<FriendRequestReturn>,
         required: true
-    },
-    user: {
-        type: Object as PropType<User>,
-        required: true
     }
+});
+
+const getUserById = (id: number) => {
+  const response = GetUserByID(id);
+  return response;
+};
+
+const user = ref<UserInfo>({
+  id: 0,
+  username: '',
+  email: '',
+  role: '',
+  password: ''
+});
+
+const { data, isLoading, err } = getUserById(props.request.receiverUserId);
+
+watch(() => data.value, (newData) => {
+  if (newData) {
+    user.value = newData;
+  }
 });
 
 const borderColor = ref(getBorderColor(props.request.status));

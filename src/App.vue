@@ -3,6 +3,10 @@ import { onMounted, watch } from 'vue';
 
 import { useRouter } from 'vue-router';
 
+import { useUserStore } from './store/userStore';
+
+const { setUser } = useUserStore();
+
 const router = useRouter()
 
 import { Login } from './api/UserApi/Login';
@@ -19,6 +23,9 @@ onMounted(() => {
         console.log(err);
       } else {
         if (!isLoading.value) {
+          if(data.value?.user) {
+            setUser(data.value.user);
+          }
           if (data.value?.token) {
             localStorage.setItem('token', data.value.token);
             router.push('/')
