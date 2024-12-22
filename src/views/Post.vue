@@ -1,7 +1,6 @@
 <template>
   <div class="posts-container">
     <!-- 使用 v-if 确保 posts 已经加载完成 -->
-<<<<<<< HEAD
     <el-card
       v-for="post in posts"
       :key="post.id"
@@ -14,12 +13,6 @@
         <span style="margin-left: 10px; color: #99a9bf">{{
           post.createdAt
         }}</span>
-=======
-    <el-card v-for="post in posts" :key="post.id" shadow="hover" v-if="!isLoading" class="post-card"  @click="goToPost(post.id)" >
-      <div slot="header" class="clearfix">
-        <span>{{ post.authorName }}</span> <!-- 显示帖子作者的名字 -->
-        <span style="margin-left: 10px; color: #99a9bf">{{ post.createdAt }}</span> <!-- 显示帖子创建时间 -->
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
       </div>
       <div class="post-content">
         <h3>{{ post.title }}</h3> <!-- 显示帖子标题 -->
@@ -63,22 +56,15 @@ const { data: posts, isLoading, err } = GetAllPosts();
 // 监听加载状态的变化
 watch(isLoading, async () => {
   if (!err.value) {
-<<<<<<< HEAD
     fetchPostInfo();
   } else {
     showMsg(err.value);
-=======
-    await fetchPostInfo(); // 加载成功后获取帖子的附加信息
-  } else {
-    showMsg(err.value); // 如果加载失败，显示错误信息
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
   }
 });
 
 // 获取帖子附加信息的方法
 const fetchPostInfo = async () => {
   for (let i = 0; i < posts.value.length; ++i) {
-<<<<<<< HEAD
     const {
       data: authorInfo,
       isLoading: authorIsLoading,
@@ -123,46 +109,6 @@ const fetchPostInfo = async () => {
     
   }
 };
-=======
-    const postId = posts.value[i].id;
-
-    // 获取作者信息
-    const { data: authorInfo, isLoading: authorIsLoading, err: authorErr } = GetUserByID(posts.value[i].authorId);
-    watch(authorIsLoading, () => {
-      if (!authorErr.value) {
-        posts.value[i].authorName = authorInfo.value.username; // 设置作者名
-      } else {
-        showMsg(authorErr.value); // 如果获取作者信息失败，显示错误信息
-      }
-    });
-
-    // 获取评论信息
-    const { data: comments, isLoading: commentIsLoading, err: commentErr } = GetCommentsByPostId(postId);
-    watch(commentIsLoading, () => {
-      if (!commentErr.value) {
-        posts.value[i].comments = comments.value; // 设置评论列表
-      } else {
-        // showMsg(commentErr.value); // 如果获取评论信息失败，显示错误信息
-      }
-    });
-
-    // 获取收藏（喜欢）信息
-    const { data: likes, isLoading: likeIsLoading, err: likeErr } = GetFavoritesByPostId(postId);
-    watch(likeIsLoading, () => {
-      if (!likeErr.value) {
-        posts.value[i].likes = likes.value; // 设置收藏列表
-      } else {
-        // showMsg(likeErr.value); // 如果获取收藏信息失败，显示错误信息
-      }
-    });
-  }
-};
-
-// 点击帖子卡片时触发的函数
-const goToPost = (postId) => {
-  router.push(`/postcontent/${postId}`);
-};
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
 </script>
 
 <style scoped>
@@ -174,7 +120,6 @@ const goToPost = (postId) => {
 }
 
 .post-card {
-<<<<<<< HEAD
   position: relative;
   /* 确保 .post-meta 能够相对于卡片定位 */
   background: linear-gradient(180deg, #e5e5e5, #ffffff);
@@ -194,19 +139,6 @@ const goToPost = (postId) => {
   /* 更强的阴影 */
   background: linear-gradient(180deg, #f0f0f0, #ffffff);
   /* 修改悬停时的渐变 */
-=======
-  position: relative; /* 确保 .post-meta 能够相对于卡片定位 */
-  background: linear-gradient(180deg, #E5E5E5, #FFFFFF); /* 银灰色到白色的渐变背景 */
-  border-radius: 8px; /* 圆角 */
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); /* 悬浮阴影 */
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; /* 过渡效果 */
-}
-
-.post-card:hover {
-  transform: translateY(-5px); /* 鼠标悬停时稍微上移 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 更强的阴影 */
-  background: linear-gradient(180deg, #F0F0F0, #FFFFFF); /* 修改悬停时的渐变 */
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
 }
 
 .clearfix {
