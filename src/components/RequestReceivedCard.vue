@@ -34,7 +34,7 @@ import { type User } from '@/model/User';
 import { type FriendRequestReturn } from '@/model/dto/FriendRequestApi/FriendRequest';
 import { type PropType } from 'vue';
 import { GetUserByID } from '@/api/UserApi/GetByID';
-import type { UserInfo } from '@/model/dto/UserApi/UserInfo';
+import type { User } from '@/model/dto/UserApi/UserInfo';
 import { ApproveFriendRequest } from '@/api/FriendShipApi/ApproveRequest';
 import { showMsg } from './MessageBox';
 import { RejectFriendRequest } from '@/api/FriendShipApi/RejectRequest';
@@ -51,7 +51,7 @@ const getUserById = (id: number) => {
   return response;
 };
 
-const user = ref<UserInfo>({
+const user = ref<User>({
   id: 0,
   username: '',
   email: '',
