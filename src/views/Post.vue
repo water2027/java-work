@@ -1,19 +1,19 @@
 <template>
   <div class="posts-container">
     <!-- 使用 v-if 确保 posts 已经加载完成 -->
-    <el-card v-for="post in posts" :key="post.id" shadow="hover" v-if="!isLoading" class="post-card">
+    <el-card v-for="post in posts" :key="post.id" shadow="hover" v-if="!isLoading" class="post-card"  @click="goToPost(post.id)" >
       <div slot="header" class="clearfix">
-        <span>{{ post.authorName }}</span>
-        <span style="margin-left: 10px; color: #99a9bf">{{ post.createdAt }}</span>
+        <span>{{ post.authorName }}</span> <!-- 显示帖子作者的名字 -->
+        <span style="margin-left: 10px; color: #99a9bf">{{ post.createdAt }}</span> <!-- 显示帖子创建时间 -->
       </div>
       <div class="post-content">
-        <h3>{{ post.title }}</h3>
-        <p>{{ post.content }}</p>
+        <h3>{{ post.title }}</h3> <!-- 显示帖子标题 -->
+        <p>{{ post.content }}</p> <!-- 显示帖子内容 -->
       </div>
       <div class="post-meta">
         <!-- 显示评论和收藏数量 -->
-        <span>💬 {{ post.comments?.length||0 }}</span>
-        <span>❤️ {{ post.likes?.length||0 }}</span>
+        <span>💬 {{ post.comments?.length || 0 }}</span> <!-- 显示评论数量 -->
+        <span>❤️ {{ post.likes?.length || 0 }}</span> <!-- 显示收藏（喜欢）数量 -->
       </div>
     </el-card>
     <!-- 如果帖子正在加载或加载失败，显示相应消息 -->
@@ -23,6 +23,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router'; // 引入 vue-router
 import { GetAllPosts } from '@/api/PostApi/GetAll';
 import { showMsg } from '@/components/MessageBox';
 import { GetUserByID } from '@/api/UserApi/GetByID';
@@ -34,9 +35,7 @@ const userCache = ref({}); // 用户信息缓存
 const commentCounts = ref({}); // 每个帖子的评论数量缓存
 const favoriteCounts = ref({}); // 每个帖子的收藏数量缓存
 
-// interface postInfo {
-
-// }
+const router = useRouter(); // 初始化路由
 
 // 获取所有帖子的方法
 const { data: posts, isLoading, err } = GetAllPosts();
