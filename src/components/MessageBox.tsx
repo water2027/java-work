@@ -20,7 +20,7 @@ const MessageBox = defineComponent({
     }
 });
 
-function showMsg(msg: string) {
+function showMsg(msg: string, p0?: string, p1?: string, p2?: string, p3?: string, p4?: () => void) {
     const div = document.createElement("div");
     document.body.appendChild(div);
     const app = createApp(MessageBox, { msg });

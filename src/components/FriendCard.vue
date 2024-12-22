@@ -1,52 +1,90 @@
 <template>
-  <el-card :style="{ maxWidth: '400px', border: '8px solid ' + borderColor, borderRadius: '16px' }">
+  <el-card :style="{ width: '400px', border: '8px solid ' + borderColor, borderRadius: '16px' }">
     <template #header>
       <div class="card-header">
-        <img width="50" height="50" :src="user.profilePicture || '/default-avatar.svg'" :alt="user.username">
-        <span><strong>{{ user.username || 'Default Name' }}</strong></span>
+        <!-- <img width="50" height="50" :src="user.profilePicture || '/default-avatar.svg'" :alt="user.username"> -->
+        <span><strong>{{ friend.username || 'Default Name' }}</strong></span>
       </div>
     </template>
     <div class="card-body">
-      <p>邮箱：{{ user.email || 'undefined@undefined.com' }}</p>
-      <p>角色：{{ user.role || '学生' }}</p>
+      <p>邮箱：{{ friend.email || 'undefined@undefined.com' }}</p>
+      <p>角色：{{ friend.role || '学生' }}</p>
     </div>
     <template #footer>
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        你们在{{ addedDate }}加了好友
-        <el-button type="danger" plain>删除好友</el-button>
+        添加日期：{{ formattedDate }}
+        <el-button type="danger" plain @click="DeleteClicked">删除好友</el-button>
       </div>
     </template>
-
   </el-card>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { type User } from '@/model/User';
 import { type PropType } from 'vue';
+import { DeleteFriendship } from '@/api/FriendShipApi/DeleteFriend';
+import { useUserStore } from '@/store/userStore';
+import type { FriendshipReturn } from '@/model/dto/FriendshipApi/Friendship';
+import { GetUserByID } from '@/api/UserApi/GetByID';
+import { showMsg } from './MessageBox';
+
+const props = defineProps({
+    friendship: {
+        type: Object as PropType<FriendshipReturn>,
+        required: true
+    }
+});
+
+const emit = defineEmits(['delete']);
+
+const { user } = useUserStore();
+
+const friend = ref({
+  id: 0,
+  username: '',
+  email: '',
+  role: ''
+});
+
+const { data, isLoading, err } = GetUserByID(props.friendship.user1Id === user.value.id ? props.friendship.user2Id : props.friendship.user1Id);
+
+watch(() => data.value, (newData) => {
+  if (newData) {
+    friend.value = newData;
+  }
+});
 
 const borderColor = ref(getRandomColor());
-const addedDate = ref(generateRandomDate());
+
+const addedDate = "2021,10,01";
 
 function getRandomColor() {
   const colors = ['#FF0000', '#FF7F00', '#FFD700', '#00FF00', '#87CEFA', '#9370DB', '#8B00FF', '#FF69B4', '#006400']; // Changed yellow to gold
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-function generateRandomDate(): string {
-    const start = new Date(2020, 0, 1).getTime();
-    const end = new Date().getTime();
-    const randomTimestamp = Math.floor(Math.random() * (end - start)) + start;
-    const date = new Date(randomTimestamp);
-    return date.toLocaleDateString();
-}
-
-defineProps({
-    user: {
-        type: Object as PropType<User>,
-        required: true
+const DeleteClicked = () => {
+  console.log('Delete button clicked');
+  showMsg('删除好友');
+  const { isLoading, err } = DeleteFriendship(user.value.id, friend.value.id);
+  watch(isLoading, () => {
+    if (err.value) {
+      showMsg(err.value);
+    } else {
+      emit('delete');
     }
+  });
+};
+
+const formattedDate = computed(() => {
+  const date = new Date(props.friendship.createdAt);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day}`;
 });
+
 </script>
 
 <style scoped>

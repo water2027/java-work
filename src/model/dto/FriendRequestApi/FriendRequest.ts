@@ -2,7 +2,6 @@ export interface FriendRequestSend {
   senderUserId: number;
   receiverUserId: number;
   announcement: string;
-  createdAt: Date;
   status: string;
 }
 
@@ -11,6 +10,6 @@ export interface FriendRequestReturn {
   senderUserId: number;
   receiverUserId: number;
   announcement: string;
-  createdAt: Date;
+  createdAt: string;
   status: string;
 }

@@ -5,14 +5,14 @@
 // private LocalDateTime createdAt;
 
 export interface FriendshipSend {
-  userId: number;
-  friendId: number;
+  user1Id: number;
+  user2Id: number;
   createdAt: Date;
 }
 
 export interface FriendshipReturn {
   id: number;
-  userId: number;
-  friendId: number;
+  user1Id: number;
+  user2Id: number;
   createdAt: Date;
 }
