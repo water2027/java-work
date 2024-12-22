@@ -60,7 +60,7 @@ const borderColor = ref(getRandomColor());
 const addedDate = "2021,10,01";
 
 function getRandomColor() {
-  const colors = ['#FF7F00', '#FFD700', '#00FF00', '#87CEFA', '#9370DB', '#FF69B4', '#e54af3', '#ff374f', '#359722'];
+  const colors = ['#FF0000', '#FF7F00', '#FFD700', '#00FF00', '#87CEFA', '#9370DB', '#8B00FF', '#FF69B4', '#006400']; // Changed yellow to gold
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
@@ -88,7 +88,6 @@ const formattedDate = computed(() => {
 </script>
 
 <style scoped>
-
 .avatar {
   width: 40px;
   height: 40px;

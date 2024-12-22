@@ -82,10 +82,15 @@ function getBorderColor(status: string): string {
       return '#B0B0B0';
   }
 }
-
 </script>
 
 <style scoped>
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
 .card-header {
   display: flex;
   align-items: center;

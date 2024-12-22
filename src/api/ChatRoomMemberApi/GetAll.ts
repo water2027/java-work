@@ -1,7 +1,7 @@
 import { useRequest } from '../request';
 
-import { type UserInfo } from '@/model/dto/UserApi/UserInfo';
+import { type User } from '@/model/User';
 
 export function GetAllMember(chatRoomId: number) {
-  return useRequest<UserInfo[]>(`/chat-room-members/chat-room/${chatRoomId}`);
+  return useRequest<User[]>(`/chat-room-members/chat-room/${chatRoomId}`);
 }

@@ -1,8 +1,8 @@
-import  { type UserInfo } from './UserInfo'
+import { type User } from "@/model/User"
 
 
 export interface LoginReturn {
-    user:UserInfo
+    user:User
     token:string
 }
 

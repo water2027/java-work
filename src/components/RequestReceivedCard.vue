@@ -109,7 +109,6 @@ function rejectClick() {
     showMsg("请求失败")
   }
 }
-
 </script>
 
 <style scoped>

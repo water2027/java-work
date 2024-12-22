@@ -46,7 +46,7 @@ const tabs = ref<Tab[]>([
   {
     name: 'sixth',
     label: '哈哈贴吧',
-    to: '/post',
+    to: '/postbar',
   },
   {
     name: 'seventh',

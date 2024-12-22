@@ -12,11 +12,11 @@ const MessageBox = defineComponent({
         }
     },
     setup(props: MessageBoxProps) {
-        return () => (
-            <div id="msgbox-root" class="bg-blue-500 text-white absolute top-0 right-0 p-4 rounded shadow">
-                <p>{props.msg}</p>
-            </div>
-        );
+      return () => (
+        <div id="msgbox-root" class="fixed top-16 left-0 right-0 mx-auto w-fit bg-blue-500 text-white p-4 rounded shadow">
+            <p>{props.msg}</p>
+        </div>
+    );
     }
 });
 
@@ -27,7 +27,7 @@ function showMsg(msg: string, p0?: string, p1?: string, p2?: string, p3?: string
     setTimeout(() => {
         app.unmount();
         document.body.removeChild(div);
-    }, 6000);
+    }, 2000);
     app.mount(div);
 }
 
