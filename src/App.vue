@@ -5,13 +5,9 @@ import { useUserStore } from './store/userStore';
 
 import { useRouter } from 'vue-router';
 
-<<<<<<< HEAD
 import { useUserStore } from './store/userStore';
 
 const { setUser } = useUserStore();
-=======
-const { setUser } = useUserStore()
->>>>>>> e10b7f211c9f3d804ae26a88b56c04bdb1249a61
 
 const router = useRouter()
 
