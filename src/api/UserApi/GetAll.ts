@@ -1,7 +1,7 @@
 import { useRequest } from '../request';
 
-import type { UserInfo } from '@/model/dto/UserApi/UserInfo';
+import type { User } from '@/model/User';
 
 export function GetAllUser() {
-  return useRequest<UserInfo>('/users');
+  return useRequest<User>('/users');
 }

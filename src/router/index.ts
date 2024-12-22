@@ -97,7 +97,6 @@ const router = createRouter({
           component: () => import('@/views/Post.vue'),
           meta:{
             auth:true
-
           }
         },
       ],

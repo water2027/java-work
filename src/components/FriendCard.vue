@@ -2,7 +2,7 @@
   <el-card :style="{ maxWidth: '400px', border: '8px solid ' + borderColor, borderRadius: '16px' }">
     <template #header>
       <div class="card-header">
-        <!-- <img width="50" height="50" :src="user.profilePicture || '/default-avatar.svg'" :alt="user.username"> -->
+        <img width="50" height="50" :src="user.profilePicture || '/default-avatar.svg'" :alt="user.username">
         <span><strong>{{ user.username || 'Default Name' }}</strong></span>
       </div>
     </template>
@@ -29,7 +29,7 @@ const borderColor = ref(getRandomColor());
 const addedDate = ref(generateRandomDate());
 
 function getRandomColor() {
-  const colors = ['#FF7F00', '#FFD700', '#00FF00', '#87CEFA', '#9370DB', '#FF69B4', '#e54af3', '#ff374f', '#359722'];
+  const colors = ['#FF0000', '#FF7F00', '#FFD700', '#00FF00', '#87CEFA', '#9370DB', '#8B00FF', '#FF69B4', '#006400']; // Changed yellow to gold
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
@@ -50,7 +50,6 @@ defineProps({
 </script>
 
 <style scoped>
-
 .avatar {
   width: 40px;
   height: 40px;

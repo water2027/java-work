@@ -72,7 +72,6 @@ function approveClick() {
 function rejectClick() {
   console.log('Reject button clicked');
 }
-
 </script>
 
 <style scoped>

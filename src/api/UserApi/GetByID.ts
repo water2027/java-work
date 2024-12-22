@@ -1,7 +1,7 @@
 import { useRequest } from '../request';
 
-import type { UserInfo } from '@/model/dto/UserApi/UserInfo';
+import type { User } from '@/model/User';
 
 export function GetUserByID(id: number) {
-  return useRequest<UserInfo>(`/users/${id}`);
+  return useRequest<User>(`/users/${id}`);
 }

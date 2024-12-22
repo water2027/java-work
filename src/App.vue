@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue';
 
+import { useUserStore } from './store/userStore';
+
 import { useRouter } from 'vue-router';
+
+const { setUser } = useUserStore()
 
 const router = useRouter()
 
@@ -19,6 +23,9 @@ onMounted(() => {
         console.log(err);
       } else {
         if (!isLoading.value) {
+          if(data.value?.user){
+            setUser(data.value?.user)
+          }
           if (data.value?.token) {
             localStorage.setItem('token', data.value.token);
             router.push('/')
