@@ -1,9 +1,11 @@
 <template>
-  <el-card :style="{ maxWidth: '400px', border: '8px solid ' + borderColor, borderRadius: '16px' }">
+  <el-card :style="{ width: '100%', margin: '20px', border: '8px solid ' + borderColor, borderRadius: '16px' }">
     <template #header>
-      <div class="card-header">
-        <img width="50" height="50" :src="user.profilePicture || '/default-avatar.svg'" :alt="user.username">
-        <span><strong>{{ user.username || 'Default Name' }}</strong></span>
+      <div class="card-header" style="display: flex; align-items: center;">
+        <span>你对</span>
+        <!-- <img width="50" height="50" :src="user.profilePicture || '/default-avatar.svg'" :alt="user.username" style="margin: 0px;"> -->
+        <strong>{{ user.username || 'Default Name' }}</strong>
+        <span>说：{{ props.request.announcement }}</span>
       </div>
     </template>
     <div class="card-body">
@@ -11,16 +13,16 @@
       <p>角色：{{ user.role || '学生' }}</p>
     </div>
     <template #footer>
-      <div style="display: flex; justify-content: center; align-items: center;">
-      <div v-if="props.request.status === 'PENDING'" style="color: #87CEEB; flex: 1; text-align: center;">
-      等待对方同意
-      </div>
-      <div v-else-if="props.request.status === 'APPROVED'" style="color: #1BC650; flex: 1; text-align: center;">
-      对方已同意
-      </div>
-      <div v-else-if="props.request.status === 'REJECTED'" style="color: #FFA39E; flex: 1; text-align: center;">
-      对方已拒绝
-      </div>
+      <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+        <div v-if="props.request.status === 'PENDING'" style="color : #366fff;flex: 1; text-align: center;">
+          <strong>对方暂未处理您的申请，请耐心等待</strong>
+        </div>
+        <div v-else-if="props.request.status === 'APPROVED'" style="color: #1BC650; flex: 1; text-align: center;">
+          <strong>对方已通过您的申请，现在可以去聊天室了！</strong>
+        </div>
+        <div v-else-if="props.request.status === 'REJECTED'" style="color: #FFA39E; flex: 1; text-align: center;">
+          <strong>对方已拒绝您的申请，请稍后再试</strong>
+        </div>
       </div>
     </template>
   </el-card>
@@ -44,7 +46,6 @@ const props = defineProps({
 });
 
 const borderColor = ref(getBorderColor(props.request.status));
-const addedDate = ref(props.request.createdAt.toLocaleDateString());
 
 watch(() => props.request.status, (newStatus) => {
   borderColor.value = getBorderColor(newStatus);
@@ -55,7 +56,7 @@ function getBorderColor(status: string): string {
     case 'APPROVED':
       return '#1BC650';
     case 'PENDING':
-      return '#87CEEB';
+      return '#366fff';
     case 'REJECTED':
       return '#FFA39E';
     default:
