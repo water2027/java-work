@@ -67,12 +67,44 @@ const router = createRouter({
           }
         },
         {
-          path: 'post',
-          name: 'post',
-          component: () => import('@/views/Post.vue'),
+          path: '/postbar',
+          name: 'postbar',
+          component: () => import('@/views/PostBar.vue'), // 新的 PostBar 主页面
+          children: [
+            {
+              path: '', // 默认子页面
+              name: 'post',
+              component: () => import('@/views/Post.vue'),
+              meta: { auth: true }
+            },
+            {
+              path: 'myhistory',
+              name: 'myhistory',
+              component: () => import('@/views/MyHistory.vue'),
+              meta: { auth: true }
+            },
+            {
+              path: 'myfavorite',
+              name: 'myfavorite',
+              component: () => import('@/views/MyFavorite.vue'),
+              meta: { auth: true }
+            },
+            {
+              path: 'createpost',
+              name: 'createpost',
+              component: () => import('@/views/CreatePost.vue'),
+              meta: { auth: true }
+            }
+          ],
+          meta: { auth: true }
+        },
+        {
+          path: 'postcontent/:id',
+          name: 'postcontent',
+          component: () => import('@/views/PostContent.vue'),
+          props:true,
           meta:{
             auth:true
-
           }
         },
       ],

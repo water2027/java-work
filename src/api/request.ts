@@ -29,15 +29,14 @@ function useRequest<T>(
     headers.set('Authorization', `Bearer ${token}`);
     requestInit.headers = headers;
   }
-  try {
-    fetch('http://'+apiBaseUrl + url, { ...requestInit })
+  fetch('http://' + apiBaseUrl + url, { ...requestInit })
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       return response.json();
     })
-    .then((jsonData: ReturnData<T>)=>{
+    .then((jsonData: ReturnData<T>) => {
       if (jsonData.code >= 200 && jsonData.code < 300) {
         data.value = jsonData.data;
         isLoading.value = false;
@@ -45,15 +44,10 @@ function useRequest<T>(
         throw new Error(jsonData.message);
       }
     })
-  } catch (e) {
-    if (e instanceof Error) {
-      isLoading.value = false;
-      err.value = e.message;
-    } else {
-      isLoading.value = false;
-      err.value = '未知错误';
-    }
-  }
+    .catch(e => {
+      err.value = String(e)
+      isLoading.value = false
+    })
   return { data, isLoading, err };
 }
 
