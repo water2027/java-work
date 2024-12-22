@@ -34,7 +34,7 @@ const students: User[] = [
 <!-- 展示20个FriendCard，每行三个 -->
 <template>
   <div class="flex flex-wrap mx-10 gap-10">
-  <FriendCard v-for="user in students" :key="user.id" :user="user" class="w-1/3" />
+    <FriendCard v-for="user in students" :key="user.id" :user="user" class="flex-grow" />
   </div>
 </template>
 
