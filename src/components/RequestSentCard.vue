@@ -33,7 +33,6 @@ import { ref, watch } from 'vue';
 import { type User } from '@/model/User';
 import { type FriendRequestReturn } from '@/model/dto/FriendRequestApi/FriendRequest';
 import { type PropType } from 'vue';
-import { type User } from '@/model/dto/UserApi/UserInfo';
 import { GetUserByID } from '@/api/UserApi/GetByID';
 
 const props = defineProps({
