@@ -31,14 +31,14 @@ const form = ref<CustomFormData[]>([
     label: 'password',
     type: 'password',
     autocomplete: 'new-password',
-    // reg: /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]{8,12}/,
+    reg: /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]{8,12}/,
   },
   {
     id: 'password2',
     value: '',
     label: 'password2',
     type: 'password',
-    // reg: /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]{8,12}/,
+    reg: /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]{8,12}/,
   },
   {
     id: 'email',
@@ -59,7 +59,7 @@ const { correct } = useFormExam(form);
 
 const passwordCorrect = computed(() => {
   return (
-    // form.value[1].reg?.test(form.value[1].value) &&
+    form.value[1].reg?.test(form.value[1].value) &&
     form.value[1].value === form.value[2].value
   );
 });
@@ -70,7 +70,7 @@ const emailCorrect = computed(() => {
 const registerHandler = async () => {
   if(form.value[4].value !== realCode.value){
     alert('验证码错误');
-    // return;
+    return;
   }
   const infoSend: RegisterSend = {
     username: form.value[0].value,
@@ -93,7 +93,7 @@ const sendVerificationCode = () => {
   const email = form.value[3].value;
   // 随机生成验证码
   const code = Math.floor(Math.random() * 1000000);
-  const { isLoading, err } = SendCode(email,'验证码',`您的验证码是${code}`);
+  const { isLoading, err } = SendCode(email,'验证码',`您的验证码是 ${code}`);
   watch(isLoading,()=>{
     if (err.value) {
       alert(err.value);
