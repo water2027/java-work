@@ -12,8 +12,13 @@ export const useUserStore = () => {
     const setUser = (newUser: User) => {
         user.value = newUser;
     }
+    const setAvatar = (avatar: string) => {
+        user.value.profilePicture = avatar;
+        localStorage.setItem('avatar', avatar);
+    }
     return {
         user,
+        setAvatar,
         setUser,
     }
 }
