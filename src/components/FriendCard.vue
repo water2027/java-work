@@ -50,7 +50,7 @@
           align-items: center;
         "
       >
-        添加日期：{{ formattedDate }}
+        添加日期：{{ new Date(friendship.createdAt).toLocaleDateString() }}
         <el-button type="danger" plain @click="DeleteClicked"
           >删除好友</el-button
         >
@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { type PropType } from 'vue';
 import { DeleteFriendship } from '@/api/FriendShipApi/DeleteFriend';
 import { useUserStore } from '@/store/userStore';
@@ -92,21 +92,6 @@ const friend = ref<User>({
   role: '',
 });
 
-const { data, isLoading, err } = GetUserByID(
-  props.friendship.user1Id === user.value.id
-    ? props.friendship.user2Id
-    : props.friendship.user1Id
-);
-
-watch(
-  () => data.value,
-  (newData) => {
-    if (newData) {
-      friend.value = newData;
-    }
-  }
-);
-
 const confirmSendEmail = async () => {
   try {
     await SendCode(
@@ -123,8 +108,6 @@ const confirmSendEmail = async () => {
 };
 
 const borderColor = ref(getRandomColor());
-
-const addedDate = '2021,10,01';
 
 function getRandomColor() {
   const colors = [
