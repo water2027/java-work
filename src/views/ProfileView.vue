@@ -37,13 +37,19 @@ onMounted(()=>{
   <div class="p-5 max-w-[600px] mx-auto text-center">
     <div class="bg-white p-5 rounded-lg shadow text-center mb-5">
       <!-- 头像，默认占位图 -->
-      <img
-      :src="
-        user.profilePicture || 'https://via.placeholder.com/150'
-      "
-      alt="User Avatar"
-      class="w-[150px] h-[150px] rounded-full object-cover mb-5 mx-auto"
-      />
+      <div class="relative w-[150px] h-[150px] mx-auto mb-5">
+        <img
+          :src="user.profilePicture || 'https://via.placeholder.com/150'"
+          alt="User Avatar"
+          class="w-full h-full rounded-full object-cover"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          @change="onProfileImageChange"
+          class="absolute inset-0 opacity-0 cursor-pointer"
+        />
+      </div>
       <!-- 显示用户名 -->
       <h2>{{ user.username || '未命名' }}</h2>
       <!-- 显示邮箱 -->

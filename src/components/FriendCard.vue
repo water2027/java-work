@@ -111,8 +111,8 @@ const confirmSendEmail = async () => {
   try {
     await SendCode(
       friend.value.email,
-      "[Java大学邮件]"+form.value.subject,
-      "你的好友通过[Java大学]向你发来了以下信息："+form.value.content,
+      "[Java大学]好友邮件："+form.value.subject,
+      "你的好友["+user.value.username+"]通过[Java大学]向你发来了以下信息："+form.value.content,
     );
 
     showMsg("已发送邮件~");
