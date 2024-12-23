@@ -28,12 +28,12 @@ const {
   err: membersErr,
 } = GetAllMember(chatRoomId.value);
 
-watch(membersIsLoading, () => {
+watch(membersIsLoading, async () => {
   if (membersErr.value) {
     showMsg(membersErr.value);
   } else {
     console.log(members.value);
-    fetchUsers();
+    await fetchUsers();
   }
 });
 
@@ -110,7 +110,7 @@ const showDetail = () => {
 };
 
 // 新增：获取所有用户数据
-const fetchUsers = () => {
+const fetchUsers = async () => {
   if (members.value?.length) {
     for (let i = 0; i < members.value.length; i++) {
       const id = members.value[i].userId;

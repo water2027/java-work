@@ -30,11 +30,6 @@ import { GetUserByID } from '@/api/UserApi/GetByID';
 import { GetFavoritesByPostId } from '@/api/FavouriteApi/GetFavoritesByPostId';
 import { GetCommentsByPostId } from '@/api/CommentApi/GetCommentsByPostId';
 
-// 定义响应式变量
-const userCache = ref({}); // 用户信息缓存
-const commentCounts = ref({}); // 每个帖子的评论数量缓存
-const favoriteCounts = ref({}); // 每个帖子的收藏数量缓存
-
 const router = useRouter(); // 初始化路由
 
 // 获取所有帖子的方法
@@ -55,14 +50,12 @@ const fetchPostInfo = async () => {
     const postId = posts.value[i].id;
 
     // 获取作者信息
-    const { data: authorInfo, isLoading: authorIsLoading, err: authorErr } = GetUserByID(posts.value[i].authorId);
-    watch(authorIsLoading, () => {
-      if (!authorErr.value) {
-        posts.value[i].authorName = authorInfo.value.username; // 设置作者名
+    const { data: authorInfo, err: authorErr } = await GetUserByID(posts.value[i].authorId);
+      if (!authorErr) {
+        posts.value[i].authorName = authorInfo.username; // 设置作者名
       } else {
-        showMsg(authorErr.value); // 如果获取作者信息失败，显示错误信息
+        showMsg(authorErr); // 如果获取作者信息失败，显示错误信息
       }
-    });
 
     // 获取评论信息
     const { data: comments, isLoading: commentIsLoading, err: commentErr } = GetCommentsByPostId(postId);
@@ -70,19 +63,17 @@ const fetchPostInfo = async () => {
       if (!commentErr.value) {
         posts.value[i].comments = comments.value; // 设置评论列表
       } else {
-        // showMsg(commentErr.value); // 如果获取评论信息失败，显示错误信息
+        showMsg(commentErr.value); // 如果获取评论信息失败，显示错误信息
       }
     });
 
     // 获取收藏（喜欢）信息
-    const { data: likes, isLoading: likeIsLoading, err: likeErr } = GetFavoritesByPostId(postId);
-    watch(likeIsLoading, () => {
-      if (!likeErr.value) {
-        posts.value[i].likes = likes.value; // 设置收藏列表
+    const { data: likes, err: likeErr } = await GetFavoritesByPostId(postId);
+      if (!likeErr) {
+        posts.value[i].likes = likes; // 设置收藏列表
       } else {
-        // showMsg(likeErr.value); // 如果获取收藏信息失败，显示错误信息
+        showMsg(likeErr); // 如果获取收藏信息失败，显示错误信息
       }
-    });
   }
 };
 

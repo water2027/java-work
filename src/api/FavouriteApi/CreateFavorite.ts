@@ -1,6 +1,6 @@
 // api/favorite.ts
 
-import { useRequest } from '../request';
+import { useAsyncRequest } from '../request';
 import type { FavoriteSend, FavoriteReturn } from '@/model/dto/FavoriteApi/Favorite';
 
 /**
@@ -8,7 +8,7 @@ import type { FavoriteSend, FavoriteReturn } from '@/model/dto/FavoriteApi/Favor
  * @param data 包含收藏信息的 DTO
  */
 export function CreateFavorite(data: FavoriteSend) {
-  return useRequest<FavoriteReturn | null>(
+  return useAsyncRequest<FavoriteReturn | null>(
     '/favorites/add',
     {
       method: 'POST',

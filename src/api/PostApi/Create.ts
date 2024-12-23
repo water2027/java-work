@@ -1,6 +1,6 @@
 // api/post.ts
 
-import { useRequest } from '../request';
+import { useAsyncRequest } from '../request';
 import type { PostSend, PostReturn } from '@/model/dto/PostApi/Post';
 
 /**
@@ -8,7 +8,7 @@ import type { PostSend, PostReturn } from '@/model/dto/PostApi/Post';
  * @param data 包含帖子信息的 DTO
  */
 export function CreatePost(data: PostSend) {
-  return useRequest<PostReturn | null>(
+  return useAsyncRequest<PostReturn | null>(
     '/posts',
     {
       method: 'POST',

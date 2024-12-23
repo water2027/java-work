@@ -1,9 +1,9 @@
-import { useRequest } from '../request';
+import { useAsyncRequest } from '../request';
 
 import { type LoginReturn, type LoginSend } from '@/model/dto/UserApi/Login';
 
 export function Login(data: LoginSend) {
-  return useRequest<LoginReturn>(
+  return useAsyncRequest<LoginReturn>(
     '/users/login',
     {
       method: 'POST',

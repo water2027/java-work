@@ -1,6 +1,6 @@
 // api/comment.ts
 
-import { useRequest } from '../request';
+import { useAsyncRequest } from '../request';
 import type { CommentSend, CommentReturn } from '@/model/dto/CommentApi/Comment';
 
 /**
@@ -8,7 +8,7 @@ import type { CommentSend, CommentReturn } from '@/model/dto/CommentApi/Comment'
  * @param data 包含评论信息的 DTO
  */
 export function CreateComment(data: CommentSend) {
-  return useRequest<CommentReturn | null>(
+  return useAsyncRequest<CommentReturn | null>(
     '/comments',
     {
       method: 'POST',

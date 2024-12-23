@@ -2,15 +2,30 @@
   <div class="create-post-container">
     <el-card shadow="hover" class="create-post-card">
       <h2>创建新帖子</h2>
-      <el-form :model="postForm" :rules="rules" ref="postFormRef" label-width="80px">
+      <el-form
+        :model="postForm"
+        :rules="rules"
+        ref="postFormRef"
+        label-width="80px"
+      >
         <el-form-item label="标题" prop="title">
-          <el-input v-model="postForm.title" placeholder="请输入帖子标题"></el-input>
+          <el-input
+            v-model="postForm.title"
+            placeholder="请输入帖子标题"
+          ></el-input>
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input type="textarea" v-model="postForm.content" :rows="4" placeholder="请输入帖子内容"></el-input>
+          <el-input
+            type="textarea"
+            v-model="postForm.content"
+            :rows="4"
+            placeholder="请输入帖子内容"
+          ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm(postFormRef)">发送</el-button>
+          <el-button type="primary" @click="submitForm(postFormRef)"
+            >发送</el-button
+          >
           <el-button @click="resetForm(postFormRef)">重置</el-button>
         </el-form-item>
       </el-form>
@@ -24,24 +39,20 @@ import { useRouter } from 'vue-router';
 import { CreatePost } from '@/api/PostApi/Create';
 import { showMsg } from '@/components/MessageBox';
 import { useUserStore } from '@/store/userStore';
-const { user } = useUserStore()
+const { user } = useUserStore();
 const router = useRouter();
 const postFormRef = ref(null);
 
 // 表单数据对象
 const postForm = ref({
   title: '',
-  content: ''
+  content: '',
 });
 
 // 表单验证规则
 const rules = ref({
-  title: [
-    { required: true, message: '请输入帖子标题', trigger: 'blur' }
-  ],
-  content: [
-    { required: true, message: '请输入帖子内容', trigger: 'blur' }
-  ]
+  title: [{ required: true, message: '请输入帖子标题', trigger: 'blur' }],
+  content: [{ required: true, message: '请输入帖子内容', trigger: 'blur' }],
 });
 
 // 提交表单的方法
@@ -49,16 +60,18 @@ const submitForm = async (formEl) => {
   if (!formEl) return;
   await formEl.validate(async (valid) => {
     if (valid) {
-      const { isLoading, err } = CreatePost({ authorId: user.value.id, ...postForm.value, imageUrls:[] });
-      watch(isLoading, () => {
-        if (err.value) {
-          showMsg(err.value)
-        } else {
-          // 清空表单并跳转到其他页面或刷新列表
-          resetForm(formEl);
-          router.push('/postbar'); // 示例：创建后跳转到帖子列表页
-        }
-      })
+      const { err } = await CreatePost({
+        authorId: user.value.id,
+        ...postForm.value,
+        imageUrls: [],
+      });
+      if (err) {
+        showMsg(err);
+      } else {
+        // 清空表单并跳转到其他页面或刷新列表
+        resetForm(formEl);
+        router.push('/postbar'); // 示例：创建后跳转到帖子列表页
+      }
     } else {
       console.log('验证失败');
       return false;
@@ -172,7 +185,7 @@ h2 {
   /* 主按钮悬停边框颜色 */
 }
 
-.el-button+.el-button {
+.el-button + .el-button {
   margin-left: 10px;
   /* 按钮之间的间距 */
 }

@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { watch } from 'vue';
 import { useRouter } from 'vue-router'; // 引入 vue-router
 
 import { showMsg } from '@/components/MessageBox';
@@ -46,11 +46,11 @@ const router = useRouter(); // 初始化路由
 // 定义响应式变量
 const { data: posts, isLoading: userIsLoading, err: fetchErr } = GetPostsByUser(user.value.id);
 
-watch(userIsLoading, () => {
+watch(userIsLoading, async () => {
   if (fetchErr.value) {
     showMsg(fetchErr.value)
   } else {
-    fetchPostInfo()
+    await fetchPostInfo()
   }
 })
 
@@ -61,14 +61,12 @@ const fetchPostInfo = async () => {
     const postId = posts.value[i].id;
 
     // 获取作者信息
-    const { data: authorInfo, isLoading: authorIsLoading, err: authorErr } = GetUserByID(posts.value[i].authorId);
-    watch(authorIsLoading, () => {
-      if (!authorErr.value) {
-        posts.value[i].authorName = authorInfo.value.username; // 设置作者名
+    const { data: authorInfo, err: authorErr } = await GetUserByID(posts.value[i].authorId);
+      if (!authorErr) {
+        posts.value[i].authorName = authorInfo.username; // 设置作者名
       } else {
-        // showMsg(authorErr.value); // 如果获取作者信息失败，显示错误信息
+        showMsg(authorErr); // 如果获取作者信息失败，显示错误信息
       }
-    });
 
     // 获取评论信息
     const { data: comments, isLoading: commentIsLoading, err: commentErr } = GetCommentsByPostId(postId);
@@ -76,35 +74,30 @@ const fetchPostInfo = async () => {
       if (!commentErr.value) {
         posts.value[i].comments = comments.value; // 设置评论列表
       } else {
-        // showMsg(commentErr.value); // 如果获取评论信息失败，显示错误信息
+        showMsg(commentErr.value); // 如果获取评论信息失败，显示错误信息
       }
     });
 
     // 获取收藏（喜欢）信息
-    const { data: likes, isLoading: likeIsLoading, err: likeErr } = GetFavoritesByPostId(postId);
-    watch(likeIsLoading, () => {
-      if (!likeErr.value) {
-        posts.value[i].likes = likes.value; // 设置收藏列表
+    const { data: likes, err: likeErr } = await GetFavoritesByPostId(postId);
+      if (!likeErr) {
+        posts.value[i].likes = likes; // 设置收藏列表
       } else {
-        // showMsg(likeErr.value); // 如果获取收藏信息失败，显示错误信息
+        showMsg(likeErr.value); // 如果获取收藏信息失败，显示错误信息
       }
-    });
   }
 };
 
 // 删除帖子的方法
 const deletePost = async (postId) => {
-  const { isLoading, err } = DeletePost(postId);
-  watch(isLoading, () => {
-    if (err.value) {
-      showMsg(err.value)
+  const { err } = await DeletePost(postId);
+    if (err) {
+      showMsg(err)
     } else {
       // 成功删除后从本地状态移除该帖子
       posts.value = posts.value.filter(post => post.id !== postId);
       showMsg('帖子删除成功', 'success');
     }
-  })
-
 };
 // 点击帖子卡片时触发的函数
 const goToPost = (postId) => {

@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import RequestReceivedCard from '@/components/RequestReceivedCard.vue';
-import { ref } from 'vue';
-import { type User } from '@/model/User';
-import { type FriendRequestReturn } from '@/model/dto/FriendRequestApi/FriendRequest';
 import { GetReceivedRequests } from '@/api/FriendShipApi/GetReceivedRequest';
 import { useUserStore } from '@/store/userStore';
 
 const {user} = useUserStore();
 
-const {data: friendRequests, isLoading, err} = GetReceivedRequests(user.value.id);
+const {data: friendRequests} = GetReceivedRequests(user.value.id);
 
 </script>
 

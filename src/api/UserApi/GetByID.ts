@@ -1,7 +1,7 @@
-import { useRequest } from '../request';
+import { useAsyncRequest } from '../request';
 
 import type { User } from '@/model/User';
 
 export function GetUserByID(id: number) {
-  return useRequest<User>(`/users/${id}`);
+  return useAsyncRequest<User>(`/users/${id}`);
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import type { TabsPaneContext } from 'element-plus';
@@ -9,7 +9,14 @@ const router = useRouter();
 
 const refresh = ref(false);
 
-const activeName = ref('first');
+const activeName = computed(()=>{
+  // 根据路由
+  for(const item of tabs.value){
+    if (route.path === item.to) {
+      return item.name
+    }
+  }
+});
 
 interface Tab {
   name: string;

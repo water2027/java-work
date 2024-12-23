@@ -5,7 +5,7 @@ import { onMounted } from 'vue';
 const userStore = useUserStore(); // 获取 user store
 const { user, setAvatar } = userStore;
 
-const onProfileImageChange = (e: Event)=>{
+const onProfileImageChange = (e: Event) => {
   const file = (e.target as HTMLInputElement)?.files?.[0];
   // base64 编码
   const reader = new FileReader();
@@ -14,42 +14,41 @@ const onProfileImageChange = (e: Event)=>{
     setAvatar(base64);
     console.log(base64);
   };
-  file&&reader.readAsDataURL(file);
-}
+  file && reader.readAsDataURL(file);
+};
 
 const logoutHandler = () => {
   localStorage.removeItem('token');
-  localStorage.removeItem('email')
-  localStorage.removeItem('password')
-  localStorage.removeItem('rememberMe')
+  localStorage.removeItem('email');
+  localStorage.removeItem('password');
+  localStorage.removeItem('rememberMe');
   window.location.reload();
 };
 
-onMounted(()=>{
-  if(localStorage.getItem('avatar')){
-    setAvatar(localStorage.getItem('avatar') as string)
+onMounted(() => {
+  if (localStorage.getItem('avatar')) {
+    setAvatar(localStorage.getItem('avatar') as string);
   }
-})
-
+});
 </script>
 
 <template>
   <div class="p-5 max-w-[600px] mx-auto text-center">
     <div class="bg-white p-5 rounded-lg shadow text-center mb-5">
       <!-- 头像，默认占位图 -->
-      <div class="relative w-[150px] h-[150px] mx-auto mb-5">
+      <label class="cursor-pointer inline-block">
         <img
           :src="user.profilePicture || 'https://via.placeholder.com/150'"
           alt="User Avatar"
-          class="w-full h-full rounded-full object-cover"
+          class="w-[150px] h-[150px] rounded-full object-cover mb-5"
         />
         <input
           type="file"
+          class="hidden"
           accept="image/*"
           @change="onProfileImageChange"
-          class="absolute inset-0 opacity-0 cursor-pointer"
         />
-      </div>
+      </label>
       <!-- 显示用户名 -->
       <h2>{{ user.username || '未命名' }}</h2>
       <!-- 显示邮箱 -->

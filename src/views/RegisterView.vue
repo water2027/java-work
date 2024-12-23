@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router';
 import { useFormExam } from '@/composables/FormExam';
 
 import { Register } from '@/api/UserApi/Register';
-import { SendCode } from '@/api/UserApi/SendCode'
+import { SendCode } from '@/api/UserApi/SendCode';
 
 import { type CustomFormData } from '@/model/CustomFormData';
 import {
@@ -14,6 +14,7 @@ import {
 } from '@/model/dto/UserApi/Register';
 
 import FormContainer from '@/components/FormContainer.vue';
+import { showMsg } from '@/components/MessageBox';
 
 const router = useRouter();
 
@@ -46,7 +47,7 @@ const form = ref<CustomFormData[]>([
     label: 'email',
     type: 'email',
     autocomplete: 'email',
-    reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    reg: /^(([^<script>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   },
   {
     id: 'code',
@@ -68,7 +69,7 @@ const emailCorrect = computed(() => {
 });
 
 const registerHandler = async () => {
-  if(form.value[4].value !== realCode.value){
+  if (form.value[4].value !== realCode.value) {
     alert('验证码错误');
     return;
   }
@@ -78,14 +79,13 @@ const registerHandler = async () => {
     email: form.value[3].value,
     role: '学生',
   };
-  const { isLoading,err } = Register(infoSend);
-  watch(isLoading,()=>{
-    if (err.value) {
-      alert(err.value);
+  Register(infoSend).then(({ data, err }) => {
+    if (err) {
+      showMsg(err);
     } else {
       router.push('/auth/login');
     }
-  })
+  });
 };
 
 const sendVerificationCode = () => {
@@ -100,7 +100,7 @@ const sendVerificationCode = () => {
     }else{
       realCode.value = code.toString();
     }
-  })
+  });
 };
 </script>
 

@@ -11,6 +11,7 @@ import { type CustomFormData } from '@/model/CustomFormData';
 
 import { Login } from '@/api/UserApi/Login';
 import { type LoginSend } from '@/model/dto/UserApi/Login';
+import { showMsg } from '@/components/MessageBox';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -42,31 +43,25 @@ const loginHandler = async () => {
     email: form.value[0].value,
     password: form.value[1].value,
   };
-  const { data, isLoading, err } = Login(infoSend);
-  watch(isLoading, () => {
-    if (err.value) {
-      console.log(err);
-    } else {
-      if (!isLoading.value) {
-        if (data.value?.token) {
-          localStorage.setItem('token', data.value.token);
-          userStore.setUser(data.value.user);
-          if(rememberMe.value){
-            localStorage.setItem('email', form.value[0].value);
-            localStorage.setItem('password', form.value[1].value);
-            localStorage.setItem('rememberMe', 'true');
-          }else{
-            localStorage.removeItem('email');
-            localStorage.removeItem('password');
-            localStorage.removeItem('rememberMe');
-          }
-          router.push('/');
-        }
+  const { data, err } = await Login(infoSend);
+  if (err) {
+    showMsg(err);
+  } else {
+    if (data?.token) {
+      localStorage.setItem('token', data.token);
+      userStore.setUser(data.user);
+      if (rememberMe.value) {
+        localStorage.setItem('email', form.value[0].value);
+        localStorage.setItem('password', form.value[1].value);
+        localStorage.setItem('rememberMe', 'true');
       } else {
-        console.log('error');
+        localStorage.removeItem('email');
+        localStorage.removeItem('password');
+        localStorage.removeItem('rememberMe');
       }
+      router.push('/');
     }
-  });
+  }
 };
 </script>
 <template>
@@ -76,7 +71,7 @@ const loginHandler = async () => {
     :disabled="!correct"
     @submit-form="loginHandler"
   >
-    <input type="checkbox" v-model="rememberMe">记住我
+    <input type="checkbox" v-model="rememberMe" />记住我
     <div class="flex flex-row justify-around">
       <router-link to="/auth/register">还没账号？</router-link>
       <router-link to="/auth/reset">忘记密码了？</router-link>

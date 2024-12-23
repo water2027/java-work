@@ -1,40 +1,40 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue';
+import { onMounted } from 'vue';
 
 import { useUserStore } from './store/userStore';
 
 import { useRouter } from 'vue-router';
-
-import { useAsyncRequest } from './api/request';
 
 const { setUser } = useUserStore();
 
 const router = useRouter();
 
 import { Login } from './api/UserApi/Login';
+import { showMsg } from './components/MessageBox';
 onMounted(() => {
+  // 获取当前url，登录成功后继续前往
+  const path = window.location.pathname;
+  console.log(path)
   if (localStorage.getItem('rememberMe') === 'true') {
     const email = localStorage.getItem('email') as string;
     const password = localStorage.getItem('password') as string;
-    const { data, isLoading, err } = Login({
+    Login({
       email: email,
       password: password,
-    });
-    watch(isLoading, () => {
-      if (err.value) {
-        console.log(err);
-      } else {
-        if (!isLoading.value) {
-          if(data.value?.user) {
-            setUser(data.value.user);
+    })
+    .then(({data, err})=>{
+      if(err){
+        showMsg(err)
+      }else{
+          if(data?.user) {
+            setUser(data.user);
           }
-          if (data.value?.token) {
-            localStorage.setItem('token', data.value.token);
-            router.push('/')
+          if (data?.token) {
+            localStorage.setItem('token', data.token);
           }
-        }
+          router.push(path)
       }
-    });
+    })
   }
 });
 window.addEventListener('beforeunload', () => {
