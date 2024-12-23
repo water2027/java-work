@@ -67,8 +67,10 @@ export default defineComponent({
 
     // 初始化 STOMP 客户端
     const initStompClient = () => {
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
       stompClient.value = new Client({
-        brokerURL: 'ws://localhost:8080/ws/chat', // 后端 STOMP WebSocket 地址
+        brokerURL: `wss://${apiBaseUrl}/ws/chat`, // 后端 STOMP WebSocket 地址
         reconnectDelay: 5000,
         onConnect: () => {
           console.log('STOMP connected!');
