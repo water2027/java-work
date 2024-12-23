@@ -8,13 +8,11 @@ import { showMsg } from '@/components/MessageBox';
 
 const { user } = useUserStore();
 
-console.log(user.value);
-
 const { data: friendships } = GetAllFriends(user.value.id);
 
 const refreshFriends = async () => {
   const { data, isLoading, err } = GetAllFriends(user.value.id);
-  watch(isLoading, (newData) => {
+  watch(isLoading, () => {
     if(err.value){
       showMsg(err.value);
     }else{

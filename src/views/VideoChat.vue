@@ -5,10 +5,12 @@
       <video ref="localVideo" autoplay muted></video>
       <video ref="remoteVideo" autoplay></video>
     </div>
-    <button @click="startCall">开始通话</button>
+    <div class="button-container">
+      <button @click="startCall" class="call-button">开始通话</button>
+      <button @click="endCall" class="call-button">结束通话</button>
+    </div>
   </div>
 </template>
-
 <script lang="ts">
 import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
 import { Client } from '@stomp/stompjs';
@@ -135,6 +137,8 @@ export default defineComponent({
 
     // 开始通话
     const startCall = async () => {
+      initWebRTC();
+      initStompClient();
       const offer = await peerConnection.value?.createOffer();
       await peerConnection.value?.setLocalDescription(offer!);
 
@@ -143,11 +147,6 @@ export default defineComponent({
         chatRoomId,
       });
     };
-
-    onMounted(() => {
-      initWebRTC();
-      initStompClient();
-    });
 
     // 清理 WebRTC 和 STOMP 客户端
     const cleanUp = () => {
@@ -168,24 +167,82 @@ export default defineComponent({
       }
     };
 
+    const endCall = () => {
+      cleanUp();
+    };
+
     onBeforeUnmount(() => {
       cleanUp();
     });
 
-    return { localVideo, remoteVideo, startCall };
+    onMounted(() => {
+      initWebRTC();
+      initStompClient();
+    });
+
+    return { localVideo, remoteVideo, startCall, endCall };
   },
 });
 </script>
 
 <style scoped>
+.video-chat {
+  font-family: 'Roboto', Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  line-height: 1.6; /* 改善段落文本的行距 */
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 2em; /* 增大标题字体 */
+  font-weight: 700; /* 加粗标题 */
+}
+
 .video-container {
   display: flex;
   justify-content: space-around;
+  margin-bottom: 20px;
 }
+
 video {
-  width: 300px;
-  height: 200px;
-  border: 1px solid #ccc;
+  width: 45%;
+  max-width: 600px;
+  height: auto;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px; /* 给按钮增加顶部间距 */
+}
+
+.call-button {
+  padding: 12px 24px; /* 调整按钮填充 */
+  font-size: 18px; /* 增大按钮字体 */
+  font-weight: 500; /* 设置按钮字体加粗 */
+  color: white;
+  background-color: #007bff;
+  border: none;
   border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  letter-spacing: 0.5px; /* 稍微增加字母间距 */
+}
+
+.call-button:hover {
+  background-color: #0056b3;
+}
+
+.call-button:active {
+  transform: translateY(2px);
 }
 </style>

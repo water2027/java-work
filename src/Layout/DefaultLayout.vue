@@ -9,21 +9,6 @@ const router = useRouter();
 
 const refresh = ref(false);
 
-const activeName = computed(()=>{
-  // 根据路由
-  for(const item of tabs.value){
-    if (route.path === item.to) {
-      return item.name
-    }
-  }
-});
-
-interface Tab {
-  name: string;
-  label: string;
-  to: string;
-}
-
 const tabs = ref<Tab[]>([
   {
     name: 'fourth',
@@ -59,8 +44,23 @@ const tabs = ref<Tab[]>([
     name: 'seventh',
     label: '视频通话',
     to: '/video',
-  }
+  },
 ]);
+const tabsToName = (() => {
+  let obj: { [key: string]: string } = {};
+  for (const tab of tabs.value) {
+    obj[tab.to] = tab.name;
+  }
+  return obj;
+})();
+
+const activeName = ref(tabsToName[route.path]);
+
+interface Tab {
+  name: string;
+  label: string;
+  to: string;
+}
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   tabs.value.forEach((item) => {
@@ -75,20 +75,26 @@ watch(
   () => {
     console.log('refresh');
     refresh.value = !refresh.value;
+    activeName.value = tabsToName[route.path];
     nextTick(() => {
       refresh.value = !refresh.value;
     });
   }
 );
-
-
 </script>
 <template>
   <div class="common-layout">
     <el-container>
       <el-header class="mb-4">
-        <h1 class="text-4xl font-bold text-center mb-6 text-black">⭐️🏫Java大学🏫⭐️</h1>
-        <el-tabs v-model="activeName" class="demo-tabs" stretch @tab-click="handleClick">
+        <h1 class="text-4xl font-bold text-center mb-6 text-black">
+          ⭐️🏫Java大学🏫⭐️
+        </h1>
+        <el-tabs
+          v-model="activeName"
+          class="demo-tabs"
+          stretch
+          @tab-click="handleClick"
+        >
           <el-tab-pane
             v-for="tab in tabs"
             :label="tab.label"

@@ -3,7 +3,6 @@ import GroupCard from '@/components/GroupCard.vue';
 
 import { GetAllChatRooms } from '@/api/ChatRoomApi/GetAll';
 
-import { useUserStore } from '@/store/userStore';
 import { watch } from 'vue';
 import { showMsg } from '@/components/MessageBox';
 
