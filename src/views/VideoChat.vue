@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onBeforeMount } from 'vue';
+import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
 import { Client } from '@stomp/stompjs';
 
 export default defineComponent({
@@ -168,7 +168,7 @@ export default defineComponent({
       }
     };
 
-    onBeforeMount(() => {
+    onBeforeUnmount(() => {
       cleanUp();
     });
 
