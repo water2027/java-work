@@ -55,6 +55,11 @@ const tabs = ref<Tab[]>([
     label: '个人中心',
     to: '/profile',
   },
+  {
+    name: 'seventh',
+    label: '视频通话',
+    to: '/video',
+  }
 ]);
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {

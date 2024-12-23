@@ -10,23 +10,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
-import { Client } from "@stomp/stompjs";
+import { defineComponent, ref, onMounted, onBeforeMount } from 'vue';
+import { Client } from '@stomp/stompjs';
 
 export default defineComponent({
-  name: "VideoChat",
+  name: 'VideoChat',
   setup() {
     const localVideo = ref<HTMLVideoElement | null>(null);
     const remoteVideo = ref<HTMLVideoElement | null>(null);
     const peerConnection = ref<RTCPeerConnection | null>(null);
     const localStream = ref<MediaStream | null>(null);
 
-    const chatRoomId = "2"; // 示例聊天室 ID
+    const chatRoomId = '2'; // 示例聊天室 ID
     const stompClient = ref<Client | null>(null);
 
     const iceServers = {
       iceServers: [
-        { urls: "stun:stun.l.google.com:19302" }, // 公共 STUN 服务器
+        { urls: 'stun:stun.l.google.com:19302' }, // 公共 STUN 服务器
       ],
     };
 
@@ -55,7 +55,7 @@ export default defineComponent({
 
       peerConnection.value.onicecandidate = (event) => {
         if (event.candidate) {
-          sendSignal("candidate", {
+          sendSignal('candidate', {
             candidate: event.candidate,
             chatRoomId,
           });
@@ -66,25 +66,28 @@ export default defineComponent({
     // 初始化 STOMP 客户端
     const initStompClient = () => {
       stompClient.value = new Client({
-        brokerURL: "ws://localhost:8080/ws/chat", // 后端 STOMP WebSocket 地址
+        brokerURL: 'ws://localhost:8080/ws/chat', // 后端 STOMP WebSocket 地址
         reconnectDelay: 5000,
         onConnect: () => {
-          console.log("STOMP connected!");
+          console.log('STOMP connected!');
 
           // 订阅视频通话的信令消息
-          stompClient.value?.subscribe(`/topic/video/${chatRoomId}`, (message) => {
-            const signal = JSON.parse(message.body);
-            if (signal.type === "offer") {
-              handleOffer(signal);
-            } else if (signal.type === "answer") {
-              handleAnswer(signal);
-            } else if (signal.type === "candidate") {
-              handleCandidate(signal);
+          stompClient.value?.subscribe(
+            `/topic/video/${chatRoomId}`,
+            (message) => {
+              const signal = JSON.parse(message.body);
+              if (signal.type === 'offer') {
+                handleOffer(signal);
+              } else if (signal.type === 'answer') {
+                handleAnswer(signal);
+              } else if (signal.type === 'candidate') {
+                handleCandidate(signal);
+              }
             }
-          });
+          );
         },
         onDisconnect: () => {
-          console.log("STOMP disconnected!");
+          console.log('STOMP disconnected!');
         },
       });
 
@@ -100,7 +103,7 @@ export default defineComponent({
       const answer = await peerConnection.value?.createAnswer();
       await peerConnection.value?.setLocalDescription(answer!);
 
-      sendSignal("answer", {
+      sendSignal('answer', {
         answer,
         chatRoomId,
       });
@@ -113,18 +116,21 @@ export default defineComponent({
     };
 
     const handleCandidate = (signal: any) => {
-      peerConnection.value?.addIceCandidate(new RTCIceCandidate(signal.candidate));
+      peerConnection.value?.addIceCandidate(
+        new RTCIceCandidate(signal.candidate)
+      );
     };
 
     // 发送信令
     const sendSignal = (type: string, data: any) => {
       if (stompClient.value?.connected) {
         stompClient.value.publish({
-          destination: `/app/send${type.charAt(0).toUpperCase() + type.slice(1)}`,
+          destination: `/app/send${
+            type.charAt(0).toUpperCase() + type.slice(1)
+          }`,
           body: JSON.stringify(data),
         });
       }
-      
     };
 
     // 开始通话
@@ -132,7 +138,7 @@ export default defineComponent({
       const offer = await peerConnection.value?.createOffer();
       await peerConnection.value?.setLocalDescription(offer!);
 
-      sendSignal("offer", {
+      sendSignal('offer', {
         offer,
         chatRoomId,
       });
@@ -141,6 +147,29 @@ export default defineComponent({
     onMounted(() => {
       initWebRTC();
       initStompClient();
+    });
+
+    // 清理 WebRTC 和 STOMP 客户端
+    const cleanUp = () => {
+      // 停止媒体流
+      if (localStream.value) {
+        localStream.value.getTracks().forEach((track) => track.stop());
+      }
+
+      // 关闭 PeerConnection
+      if (peerConnection.value) {
+        peerConnection.value.close();
+        peerConnection.value = null;
+      }
+
+      // 关闭 STOMP 客户端
+      if (stompClient.value?.connected) {
+        stompClient.value.deactivate();
+      }
+    };
+
+    onBeforeMount(() => {
+      cleanUp();
     });
 
     return { localVideo, remoteVideo, startCall };

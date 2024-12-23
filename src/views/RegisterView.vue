@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useFormExam } from '@/composables/FormExam';
@@ -9,7 +9,6 @@ import { SendCode } from '@/api/UserApi/SendCode';
 
 import { type CustomFormData } from '@/model/CustomFormData';
 import {
-  type RegisterReturn,
   type RegisterSend,
 } from '@/model/dto/UserApi/Register';
 
@@ -70,7 +69,7 @@ const emailCorrect = computed(() => {
 
 const registerHandler = async () => {
   if (form.value[4].value !== realCode.value) {
-    alert('验证码错误');
+    showMsg('验证码错误');
     return;
   }
   const infoSend: RegisterSend = {
@@ -79,7 +78,7 @@ const registerHandler = async () => {
     email: form.value[3].value,
     role: '学生',
   };
-  Register(infoSend).then(({ data, err }) => {
+  Register(infoSend).then(({ err }) => {
     if (err) {
       showMsg(err);
     } else {

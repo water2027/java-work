@@ -114,6 +114,11 @@ const router = createRouter({
             auth: true,
           },
         },
+        {
+          path: 'video',
+          name: 'video',
+          component: () => import('@/views/VideoChat.vue'),
+        }
       ],
     },
     {

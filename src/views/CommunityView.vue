@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import GroupCard from '@/components/GroupCard.vue';
 
-import { GetAllChatRooms } from '@/api/ChatRoomApi/GetAll';
+import { GetPublicChatRoomsByUserId } from '@/api/ChatRoomApi/GetAll';
 
-const { data: groupInfos, isLoading } = GetAllChatRooms();
+import { useUserStore } from '@/store/userStore';
+
+const { user } = useUserStore();
+
+const { data: groupInfos, isLoading } = GetPublicChatRoomsByUserId(user.value.id);
 
 </script>
 <template>

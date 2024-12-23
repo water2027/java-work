@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { GetPostById } from '@/api/PostApi/GetByID';
 import { GetCommentsByPostId } from '@/api/CommentApi/GetCommentsByPostId';
@@ -65,7 +65,6 @@ import { useUserStore } from '@/store/userStore';
 import { CreateFavorite } from '@/api/FavouriteApi/CreateFavorite';
 import { DeleteFavoriteById } from '@/api/FavouriteApi/deleteFavoriteById';
 import { GetFavoritesByPostId } from '@/api/FavouriteApi/GetFavoritesByPostId';
-import { pa } from 'element-plus/es/locale/index.mjs';
 
 const { user } = useUserStore();
 // 获取当前路由信息
