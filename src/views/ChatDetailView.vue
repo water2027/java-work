@@ -45,13 +45,15 @@ const users = ref<{ [key: number]: User }>({});
 const { data: chatRoom } = GetChatRoomByID(chatRoomId.value);
 
 const getUserById = (id: number) => {
-  return users.value[id] || {
-    id,
-    username: '未知用户',
-    email: '',
-    role: 'user',
-    profilePicture: ''
-  };
+  return (
+    users.value[id] || {
+      id,
+      username: '未知用户',
+      email: '',
+      role: 'user',
+      profilePicture: '',
+    }
+  );
 };
 
 const scrollToBottom = () => {
@@ -114,25 +116,19 @@ const fetchUsers = async () => {
   if (members.value?.length) {
     for (let i = 0; i < members.value.length; i++) {
       const id = members.value[i].userId;
-      const {
-        data: userInfo,
-        isLoading: userInfoIsLoading,
-        err: userInfoErr,
-      } = GetUserByID(id);
-      watch(userInfoIsLoading, () => {
-        if (userInfoErr.value) {
-          showMsg(userInfoErr.value);
-        } else {
-          // 确保存储完整的 User 对象
-          users.value[id] = userInfo.value || {
-            id,
-            username: '未知用户',
-            email: '未知邮箱',
-            role: '未知角色',
-            profilePicture: ''
-          };
-        }
-      });
+      const { data: userInfo, err: userInfoErr } = await GetUserByID(id);
+      if (userInfoErr) {
+        showMsg(userInfoErr);
+      } else {
+        // 确保存储完整的 User 对象
+        users.value[id] = userInfo || {
+          id,
+          username: '未知用户',
+          email: '未知邮箱',
+          role: '未知角色',
+          profilePicture: '',
+        };
+      }
     }
   }
 };
@@ -147,7 +143,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="flex flex-row w-full">
-    <div class="w-full flex flex-col border border-slate-500 h-[70vh] w-[100vw]">
+    <div
+      class="w-full flex flex-col border border-slate-500 h-[70vh] w-[100vw]"
+    >
       <div class="flex flex-row justify-center">
         <h2 class="text-center ml-auto">{{ chatRoom?.name || '加载中' }}</h2>
         <!-- 修改：展示聊天室名字 -->
@@ -194,8 +192,14 @@ onBeforeUnmount(() => {
       v-if="detail"
       class="flex flex-col border-slate-500 h-[100vh] overflow-hidden w-[20vw]"
     >
-      <h2 class="text-xl font-bold p-4 border-b border-slate-300">聊天室成员列表</h2>
-      <ContactsCard v-for="member in members" :key="member.id" :user="getUserById(member.id)"/>
+      <h2 class="text-xl font-bold p-4 border-b border-slate-300">
+        聊天室成员列表
+      </h2>
+      <ContactsCard
+        v-for="member in members"
+        :key="member.id"
+        :user="getUserById(member.id)"
+      />
     </div>
   </div>
 </template>
