@@ -124,7 +124,6 @@ export default defineComponent({
           body: JSON.stringify(data),
         });
       }
-      r
       
     };
 
