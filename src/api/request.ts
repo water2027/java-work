@@ -1,4 +1,4 @@
-import { ref, type Ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, type Ref, onMounted, onBeforeUnmount, watch } from 'vue';
 
 import { type ReturnData } from '@/model/dto/ReturnData';
 
@@ -44,11 +44,50 @@ function useRequest<T>(
         throw new Error(jsonData.message);
       }
     })
-    .catch(e => {
-      err.value = String(e)
-      isLoading.value = false
-    })
+    .catch((e) => {
+      err.value = String(e);
+      isLoading.value = false;
+    });
   return { data, isLoading, err };
 }
 
-export { useRequest };
+// 应该返回一个Promise对象
+async function useAsyncRequest<T>(
+	url: string,
+	requestInit: RequestInit = {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	},
+	tokenIsNeeded: boolean = true
+) {
+	let data = null;
+	let err = '';
+	if (tokenIsNeeded) {
+		const token = localStorage.getItem('token');
+		const headers = new Headers(requestInit.headers ?? {});
+		headers.set('Authorization', `Bearer ${token}`);
+		requestInit.headers = headers;
+	}
+	try {
+		const resp = await fetch('https://' + apiBaseUrl + url, {
+			...requestInit,
+		});
+		if (!resp.ok) {
+			throw new Error(`HTTP error! status: ${resp.status}`);
+		}
+		const jsonData = await resp.json();
+		if (jsonData.code >= 200 && jsonData.code < 300) {
+			data = jsonData.data;
+			return { data, err };
+		} else {
+			throw new Error(jsonData.message);
+		}
+	} catch (e) {
+		err = String(e);
+		return { data, err };
+	}
+}
+
+export { useRequest, useAsyncRequest };
