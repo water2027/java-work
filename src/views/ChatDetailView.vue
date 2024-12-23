@@ -198,7 +198,7 @@ onBeforeUnmount(() => {
       <ContactsCard
         v-for="member in members"
         :key="member.id"
-        :user="getUserById(member.id)"
+        :user="getUserById(member.userId)"
       />
     </div>
   </div>
