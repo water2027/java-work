@@ -38,6 +38,8 @@ const { data: posts, isLoading, err } = GetAllPosts();
 // 监听加载状态的变化
 watch(isLoading, async () => {
   if (!err.value) {
+    // 让posts倒序
+    posts.value = posts.value.reverse()
     await fetchPostInfo(); // 加载成功后获取帖子的附加信息
   } else {
     showMsg(err.value); // 如果加载失败，显示错误信息

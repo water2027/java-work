@@ -50,6 +50,7 @@ watch(userIsLoading, async () => {
   if (fetchErr.value) {
     showMsg(fetchErr.value)
   } else {
+    posts.value = posts.value.reverse()
     await fetchPostInfo()
   }
 })

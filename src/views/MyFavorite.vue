@@ -61,6 +61,7 @@ const {
 // 监听加载状态的变化
 watch(postsIsLoading, async () => {
   if (!favoriteErr.value) {
+    posts.value = posts.value.reverse()
     await fetchPostInfo(); // 加载成功后获取帖子的附加信息
   } else {
     showMsg(favoriteErr.value); // 如果加载失败，显示错误信息
