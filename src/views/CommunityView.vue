@@ -1,13 +1,26 @@
 <script setup lang="ts">
 import GroupCard from '@/components/GroupCard.vue';
 
-import { GetPublicChatRoomsByUserId } from '@/api/ChatRoomApi/GetAll';
+import { GetAllChatRooms } from '@/api/ChatRoomApi/GetAll';
 
 import { useUserStore } from '@/store/userStore';
+import { watch } from 'vue';
+import { showMsg } from '@/components/MessageBox';
 
 const { user } = useUserStore();
 
-const { data: groupInfos, isLoading } = GetPublicChatRoomsByUserId(user.value.id);
+const { data: groupInfos, isLoading, err } = GetAllChatRooms();
+
+watch(isLoading,()=>{
+  // 如果名字以 private 开头，移出
+  if(err.value){
+    showMsg(err.value);
+  }else{
+    groupInfos.value = groupInfos.value?.filter((group) => {
+      return !group.name.startsWith('Private');
+    });
+  }
+})
 
 </script>
 <template>
