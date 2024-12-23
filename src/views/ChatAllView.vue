@@ -8,11 +8,11 @@
           background-color="#14B441"
           text-color="#fff"
           active-text-color="#ffd04b"
-          style="font-size: 18px"
+          style="font-size: 16px"
         >
           <el-sub-menu index="1">
             <template #title>
-              <span style="font-weight: bold; font-size: 18px">联系人</span>
+              <span style="font-weight: bold; font-size: 16px">联系人</span>
             </template>
             <RouterLink
               v-for="chat in privateChats"
@@ -21,7 +21,7 @@
             >
               <el-menu-item
                 :index="'1-' + chat.id"
-                style="font-weight: bold; font-size: 18px"
+                style="font-weight: bold; font-size: 16px"
               >
                 {{ chat.name }}
               </el-menu-item>
@@ -29,7 +29,7 @@
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
-              <span style="font-weight: bold; font-size: 18px">公共聊天室</span>
+              <span style="font-weight: bold; font-size: 16px">公共聊天室</span>
             </template>
             <RouterLink
               v-for="chat in publicChats"
@@ -38,7 +38,7 @@
             >
               <el-menu-item
                 :index="'2-' + chat.id"
-                style="font-weight: bold; font-size: 18px"
+                style="font-weight: bold; font-size: 16px"
               >
                 {{ chat.name }}
               </el-menu-item>
@@ -63,11 +63,41 @@
           <span>🌟 欢迎来到聊天中心 🌟</span>
         </div>
         <div style="margin-left: auto; padding-right: 20px">
+          <el-button
+            type="warning"
+            round
+            plain
+            @click="dialogFormVisible = true"
+            >加入聊天室</el-button
+          >
           <el-button type="warning" round plain @click="createChatRoom"
             >添加聊天室</el-button
           >
         </div>
       </el-header>
+
+      <el-dialog v-model="dialogFormVisible" title="加入聊天室" width="500">
+        <el-form :model="form">
+          <el-form-item label="聊天室ID" :label-width="formLabelWidth">
+            <el-input v-model="form.chatRoomId" autocomplete="off" />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button
+              type="primary"
+              @click="
+                () => {
+                  dialogFormVisible = false;
+                  joinChatRoom();
+                }
+              "
+              >确认</el-button
+            >
+          </div>
+        </template>
+      </el-dialog>
       <el-main>
         <RouterView />
       </el-main>
@@ -88,10 +118,14 @@ import {
   GetPrivateChatRoomsByUserId,
   GetPublicChatRoomsByUserId,
 } from '@/api/ChatRoomApi/GetAll';
+import { addMemberToChatRoom } from '@/api/ChatRoomMemberApi/GetAll';
 
 const router = useRouter();
 const route = useRoute();
 const activeIndex = ref('');
+const dialogFormVisible = ref(false);
+const form = ref({ chatRoomId: '' });
+const formLabelWidth = '120px';
 
 const { user } = useUserStore();
 
@@ -118,20 +152,67 @@ const inputData: CustomFormData[] = [
 ];
 
 const createChatRoom = () => {
-  useEasyForm(inputData, (id: number) => {
-    CreateChatRoom({
+  useEasyForm(inputData, (courseId: number) => {
+    const {
+      data: CreateChatRoomValue,
+      isLoading: CreateChatRoomIsLoading,
+      err: CreateChatRoomErr,
+    } = CreateChatRoom({
       name: inputData[0].value,
-      courseId: id,
+      courseId,
+    });
+    watch(CreateChatRoomIsLoading, () => {
+      if (CreateChatRoomErr.value) {
+        showMsg(CreateChatRoomErr.value);
+      } else {
+        showMsg(
+          CreateChatRoomValue?.value?.id
+            ? '创建成功，正在自动添加成员'
+            : '没有成功添加成员!!!!'
+        );
+        if (CreateChatRoomValue?.value?.id) {
+          showMsg('创建成功，正在自动添加成员');
+          const {
+            data: autoAddMemberData,
+            isLoading: autoAddMemberIsLoading,
+            err: autoAddMemberErr,
+          } = addMemberToChatRoom({
+            chatRoomId: CreateChatRoomValue.value?.id,
+            userId: user.value?.id,
+          });
+          watch(autoAddMemberIsLoading, () => {
+            if (autoAddMemberErr.value) {
+              showMsg(autoAddMemberErr.value);
+            } else {
+              showMsg('添加成员成功');
+            }
+          });
+        } else {
+          showMsg('没有成功添加成员');
+        }
+      }
     });
   });
 };
 
-// 添加这个函数来更新 activeIndex
+const joinChatRoom = async () => {
+  try {
+    await addMemberToChatRoom({
+      chatRoomId: parseInt(form.value.chatRoomId),
+      userId: user.value.id,
+    });
+    showMsg('加入成功');
+    form.value = { chatRoomId: '' };
+  } catch (error) {
+    showMsg('加入失败');
+  }
+};
+
 const updateActiveIndex = (path: string) => {
-  const chatId = path.split('/').pop(); // 获取路由中的聊天室 ID
-  if (privateChats.value?.some(chat => chat.id.toString() === chatId)) {
+  const chatId = path.split('/').pop();
+  if (privateChats.value?.some((chat) => chat.id.toString() === chatId)) {
     activeIndex.value = '1-' + chatId;
-  } else if (publicChats.value?.some(chat => chat.id.toString() === chatId)) {
+  } else if (publicChats.value?.some((chat) => chat.id.toString() === chatId)) {
     activeIndex.value = '2-' + chatId;
   }
 };

@@ -180,7 +180,7 @@ onBeforeUnmount(() => {
       v-if="detail"
       class="flex flex-col border-slate-500 h-[70vh] overflow-auto"
     >
-      <ContactsCard v-for="member in members" :key="member.id" :user="member" />
+      <ContactsCard v-for="member in members" :key="member.id" :user="getUserById(member.id)"/>
     </div>
   </div>
 </template>
