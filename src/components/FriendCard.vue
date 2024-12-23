@@ -12,7 +12,7 @@
     </div>
     <template #footer>
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        添加日期：{{ formattedDate }}
+        添加日期：{{ new Date(friendship.createdAt).toLocaleString() }}
         <el-button type="danger" plain @click="DeleteClicked">删除好友</el-button>
       </div>
     </template>
@@ -20,14 +20,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { type User } from '@/model/User';
+import { computed, ref, watch, onMounted } from 'vue';
 import { type PropType } from 'vue';
 import { DeleteFriendship } from '@/api/FriendShipApi/DeleteFriend';
 import { useUserStore } from '@/store/userStore';
 import type { FriendshipReturn } from '@/model/dto/FriendshipApi/Friendship';
 import { GetUserByID } from '@/api/UserApi/GetByID';
 import { showMsg } from './MessageBox';
+import type { User } from '@/model/User';
 
 const props = defineProps({
     friendship: {
@@ -40,24 +40,15 @@ const emit = defineEmits(['delete']);
 
 const { user } = useUserStore();
 
-const friend = ref({
+const friend = ref<User>({
   id: 0,
   username: '',
   email: '',
   role: ''
 });
 
-const { data, isLoading, err } = GetUserByID(props.friendship.user1Id === user.value.id ? props.friendship.user2Id : props.friendship.user1Id);
-
-watch(() => data.value, (newData) => {
-  if (newData) {
-    friend.value = newData;
-  }
-});
 
 const borderColor = ref(getRandomColor());
-
-const addedDate = "2021,10,01";
 
 function getRandomColor() {
   const colors = ['#FF0000', '#FF7F00', '#FFD700', '#00FF00', '#87CEFA', '#9370DB', '#8B00FF', '#FF69B4', '#006400']; // Changed yellow to gold
@@ -77,12 +68,13 @@ const DeleteClicked = () => {
   });
 };
 
-const formattedDate = computed(() => {
-  const date = new Date(props.friendship.createdAt);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}/${month}/${day}`;
+onMounted(async () => {
+  const { data, err } = await GetUserByID(props.friendship.user1Id === user.value.id ? props.friendship.user2Id : props.friendship.user1Id);
+  if (err) {
+    showMsg(err);
+  } else {
+    friend.value = data;
+  }
 });
 
 </script>

@@ -1,7 +1,14 @@
 <template>
-  <el-card :style="{ width: '100%', margin: '20px', border: '8px solid ' + borderColor, borderRadius: '16px' }">
+  <el-card
+    :style="{
+      width: '100%',
+      margin: '20px',
+      border: '8px solid ' + borderColor,
+      borderRadius: '16px',
+    }"
+  >
     <template #header>
-      <div class="card-header" style="display: flex; align-items: center;">
+      <div class="card-header" style="display: flex; align-items: center">
         <span>你对</span>
         <!-- <img width="50" height="50" :src="user.profilePicture || '/default-avatar.svg'" :alt="user.username" style="margin: 0px;"> -->
         <strong>{{ user.username || 'Default Name' }}</strong>
@@ -13,14 +20,30 @@
       <p>角色：{{ user.role || '学生' }}</p>
     </div>
     <template #footer>
-      <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
-        <div v-if="props.request.status === 'PENDING'" style="color : #366fff;flex: 1; text-align: center;">
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+        "
+      >
+        <div
+          v-if="props.request.status === 'PENDING'"
+          style="color: #366fff; flex: 1; text-align: center"
+        >
           <strong>对方暂未处理您的申请，请耐心等待</strong>
         </div>
-        <div v-else-if="props.request.status === 'APPROVED'" style="color: #1BC650; flex: 1; text-align: center;">
+        <div
+          v-else-if="props.request.status === 'APPROVED'"
+          style="color: #1bc650; flex: 1; text-align: center"
+        >
           <strong>对方已通过您的申请，现在可以去聊天室了！</strong>
         </div>
-        <div v-else-if="props.request.status === 'REJECTED'" style="color: #FFA39E; flex: 1; text-align: center;">
+        <div
+          v-else-if="props.request.status === 'REJECTED'"
+          style="color: #ffa39e; flex: 1; text-align: center"
+        >
           <strong>对方已拒绝您的申请，请稍后再试</strong>
         </div>
       </div>
@@ -29,17 +52,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { type User } from '@/model/User';
 import { type FriendRequestReturn } from '@/model/dto/FriendRequestApi/FriendRequest';
 import { type PropType } from 'vue';
 import { GetUserByID } from '@/api/UserApi/GetByID';
 
 const props = defineProps({
-    request: {
-        type: Object as PropType<FriendRequestReturn>,
-        required: true
-    }
+  request: {
+    type: Object as PropType<FriendRequestReturn>,
+    required: true,
+  },
 });
 
 const getUserById = (id: number) => {
@@ -52,25 +75,29 @@ const user = ref<User>({
   username: '',
   email: '',
   role: '',
-  password: ''
+  password: '',
 });
 
-const { data, isLoading, err } = getUserById(props.request.receiverUserId);
-
-watch(() => data.value, (newData) => {
-  if (newData) {
-    user.value = newData;
+onMounted(async () => {
+  const { data, err } = await getUserById(props.request.receiverUserId);
+  if (err) {
+    console.log(err);
+  } else {
+    user.value = data;
   }
 });
 
 const borderColor = ref(getBorderColor(props.request.status));
 
-watch(() => props.request.status, (newStatus) => {
-  borderColor.value = getBorderColor(newStatus);
-});
+watch(
+  () => props.request.status,
+  (newStatus) => {
+    borderColor.value = getBorderColor(newStatus);
+  }
+);
 
 function getBorderColor(status: string): string {
-  switch(status) {
+  switch (status) {
     case 'APPROVED':
       return '#1BC650';
     case 'PENDING':

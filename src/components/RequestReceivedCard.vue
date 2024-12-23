@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { type User } from '@/model/User';
 import { type FriendRequestReturn } from '@/model/dto/FriendRequestApi/FriendRequest';
 import { type PropType } from 'vue';
@@ -45,11 +45,6 @@ const props = defineProps({
     }
 });
 
-const getUserById = (id: number) => {
-  const response = GetUserByID(id);
-  return response;
-};
-
 const user = ref<User>({
   id: 0,
   username: '',
@@ -58,11 +53,12 @@ const user = ref<User>({
   password: ''
 });
 
-const { data, isLoading, err } = getUserById(props.request.senderUserId);
-
-watch(() => data.value, (newData) => {
-  if (newData) {
-    user.value = newData;
+onMounted(async () => {
+  const { data, err } = await GetUserByID(props.request.senderUserId);
+  if (err) {
+    showMsg(err);
+  } else {
+    user.value = data;
   }
 });
 
