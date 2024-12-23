@@ -59,7 +59,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/userStore';
 import { SendFriendRequest } from '@/api/FriendShipApi/SendRequest';
@@ -97,13 +96,15 @@ const confirmSendRequest = async () => {
   }
 
   try {
-    await SendFriendRequest({
+    const { err } = await SendFriendRequest({
       senderUserId: user.value.id,
       receiverUserId: parseInt(form.value.friendId),
       announcement: form.value.note,
       status: "PENDING"
     });
-
+    if (err){
+      throw new Error(err);
+    }
     showMsg("已发送好友请求~");
     form.value = { friendId: '', note: '' };
   } catch (error) {

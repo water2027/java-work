@@ -1,6 +1,6 @@
 // api/favorite.ts
 
-import { useRequest } from '../request';
+import { useAsyncRequest } from '../request';
 import type { FavoriteReturn } from '@/model/dto/FavoriteApi/Favorite';
 
 /**
@@ -8,7 +8,7 @@ import type { FavoriteReturn } from '@/model/dto/FavoriteApi/Favorite';
  * @param postId 帖子ID
  */
 export function GetFavoritesByPostId(postId: number) {
-  return useRequest<FavoriteReturn[] | null>(`/favorites/byPost/${postId}`, {
+  return useAsyncRequest<FavoriteReturn[] | null>(`/favorites/byPost/${postId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

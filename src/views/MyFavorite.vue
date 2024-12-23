@@ -1,20 +1,34 @@
 <template>
   <div class="posts-container">
     <!-- 使用 v-if 确保 posts 已经加载完成 -->
-    <el-card v-for="post in posts" :key="post.id" shadow="hover" v-if="!postsIsLoading" class="post-card"
-      @click="goToPost(post.postId)">
+    <el-card
+      v-for="post in posts"
+      :key="post.id"
+      shadow="hover"
+      v-if="!postsIsLoading"
+      class="post-card"
+      @click="goToPost(post.postId)"
+    >
       <div slot="header" class="clearfix">
-        <span>{{ post.authorName }}</span> <!-- 显示帖子作者的名字 -->
-        <span style="margin-left: 10px; color: #99a9bf">{{ post.createdAt }}</span> <!-- 显示帖子创建时间 -->
+        <span>{{ post.authorName }}</span>
+        <!-- 显示帖子作者的名字 -->
+        <span style="margin-left: 10px; color: #99a9bf">{{
+          post.createdAt
+        }}</span>
+        <!-- 显示帖子创建时间 -->
       </div>
       <div class="post-content">
-        <h3>{{ post.title }}</h3> <!-- 显示帖子标题 -->
-        <p>{{ post.content }}</p> <!-- 显示帖子内容 -->
+        <h3>{{ post.title }}</h3>
+        <!-- 显示帖子标题 -->
+        <p>{{ post.content }}</p>
+        <!-- 显示帖子内容 -->
       </div>
       <div class="post-meta">
         <!-- 显示评论和收藏数量 -->
-        <span>💬 {{ post.comments?.length || 0 }}</span> <!-- 显示评论数量 -->
-        <span>❤️ {{ post.likes?.length || 0 }}</span> <!-- 显示收藏（喜欢）数量 -->
+        <span>💬 {{ post.comments?.length || 0 }}</span>
+        <!-- 显示评论数量 -->
+        <span>❤️ {{ post.likes?.length || 0 }}</span>
+        <!-- 显示收藏（喜欢）数量 -->
       </div>
     </el-card>
     <!-- 如果帖子正在加载或加载失败，显示相应消息 -->
@@ -23,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router'; // 引入 vue-router
 
 import { showMsg } from '@/components/MessageBox';
@@ -33,22 +47,21 @@ import { GetCommentsByPostId } from '@/api/CommentApi/GetCommentsByPostId';
 import { GetFavoritesByAuthorId } from '@/api/FavouriteApi/GetFavoritesByAuthorId';
 import { GetPostById } from '@/api/PostApi/GetByID';
 import { useUserStore } from '@/store/userStore';
-// 定义响应式变量
-const userCache = ref({}); // 用户信息缓存
-const commentCounts = ref({}); // 每个帖子的评论数量缓存
-const favoriteCounts = ref({}); // 每个帖子的收藏数量缓存
-
 const userStore = useUserStore();
 const { user } = userStore; // 当前用户信息
 const router = useRouter(); // 初始化路由
 const route = useRoute(); // 获取当前路由信息
 
-const { data: posts, isLoading: postsIsLoading, err: favoriteErr } = GetFavoritesByAuthorId(user.value.id);
+const {
+  data: posts,
+  isLoading: postsIsLoading,
+  err: favoriteErr,
+} = GetFavoritesByAuthorId(user.value.id);
 
 // 监听加载状态的变化
-watch(postsIsLoading, () => {
+watch(postsIsLoading, async () => {
   if (!favoriteErr.value) {
-    fetchPostInfo(); // 加载成功后获取帖子的附加信息
+    await fetchPostInfo(); // 加载成功后获取帖子的附加信息
   } else {
     showMsg(favoriteErr.value); // 如果加载失败，显示错误信息
   }
@@ -59,68 +72,67 @@ const fetchPostInfo = async () => {
   for (let i = 0; i < posts.value.length; ++i) {
     const postId = posts.value[i].postId;
 
-    const { data: postInfo, isLoading: postInfoIsLoading, err: postInfoErr } = GetPostById(postId)
-
-    watch(postInfoIsLoading, () => {
+    const { data: postInfo, isLoading: postInfoIsLoading, err: postInfoErr } = GetPostById(postId);
+    watch(postInfoIsLoading, async ()=>{
       if (postInfoErr.value) {
-        showMsg(postInfo.value)
+        showMsg(postInfoErr.value);
       } else {
-        posts.value[i].content = postInfo.value.content
-        posts.value[i].createdAt = postInfo.value.createdAt
-        posts.value[i].title = postInfo.value.title
-        nextTick(() => {
-          // 获取作者信息
-          const { data: authorInfo, isLoading: authorIsLoading, err: authorErr } = GetUserByID(postInfo.value.authorId);
-          watch(authorIsLoading, () => {
-            if (!authorErr.value) {
-              posts.value[i].authorName = authorInfo.value.username; // 设置作者名
-            } else {
-              // showMsg(authorErr.value); // 如果获取作者信息失败，显示错误信息
-            }
-          });
-        })
+        posts.value[i].content = postInfo.value.content;
+        posts.value[i].createdAt = postInfo.value.createdAt;
+        posts.value[i].title = postInfo.value.title;
+        // 获取作者信息
+        const {
+          data: authorInfo,
+          err: authorErr,
+        } = await GetUserByID(postInfo.value.authorId);
+          if (!authorErr) {
+            posts.value[i].authorName = authorInfo.username; // 设置作者名
+          } else {
+            showMsg(authorErr); // 如果获取作者信息失败，显示错误信息
+          }
       }
     })
 
     // 获取评论信息
-    const { data: comments, isLoading: commentIsLoading, err: commentErr } = GetCommentsByPostId(postId);
+    const {
+      data: comments,
+      isLoading: commentIsLoading,
+      err: commentErr,
+    } = GetCommentsByPostId(postId);
     watch(commentIsLoading, () => {
       if (!commentErr.value) {
         posts.value[i].comments = comments.value; // 设置评论列表
       } else {
-        // showMsg(commentErr.value); // 如果获取评论信息失败，显示错误信息
+        showMsg(commentErr.value); // 如果获取评论信息失败，显示错误信息
       }
     });
 
     // 获取收藏（喜欢）信息
-    const { data: likes, isLoading: likeIsLoading, err: likeErr } = GetFavoritesByPostId(postId);
-    watch(likeIsLoading, () => {
-      if (!likeErr.value) {
-        posts.value[i].likes = likes.value; // 设置收藏列表
+    const {
+      data: likes,
+      err: likeErr,
+    } = await GetFavoritesByPostId(postId);
+      if (!likeErr) {
+        posts.value[i].likes = likes; // 设置收藏列表
       } else {
-        // showMsg(likeErr.value); // 如果获取收藏信息失败，显示错误信息
+        showMsg(likeErr); // 如果获取收藏信息失败，显示错误信息
       }
-    });
   }
 };
 
 // 监听路由参数变化
-watch(() => route.params.id, () => {
-  fetchFavoritePosts();
-});
-
-// 监听用户状态变化，当用户登录或登出时重新加载收藏帖子
-watch(() => userStore.user, () => {
-  fetchFavoritePosts();
-}, { deep: true });
-
+watch(
+  () => route.params.id,
+  () => {
+    fetchFavoritePosts();
+  }
+);
 
 // 点击帖子卡片时触发的函数
 const goToPost = (postId) => {
   router.push(`/postcontent/${postId}`);
 };
 </script>
-
 
 <style scoped>
 /* 样式部分 */
@@ -134,7 +146,7 @@ const goToPost = (postId) => {
 .post-card {
   position: relative;
   /* 确保 .post-meta 能够相对于卡片定位 */
-  background: linear-gradient(180deg, #E5E5E5, #FFFFFF);
+  background: linear-gradient(180deg, #e5e5e5, #ffffff);
   /* 银灰色到白色的渐变背景 */
   border-radius: 8px;
   /* 圆角 */
@@ -149,7 +161,7 @@ const goToPost = (postId) => {
   /* 鼠标悬停时稍微上移 */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   /* 更强的阴影 */
-  background: linear-gradient(180deg, #F0F0F0, #FFFFFF);
+  background: linear-gradient(180deg, #f0f0f0, #ffffff);
   /* 修改悬停时的渐变 */
 }
 

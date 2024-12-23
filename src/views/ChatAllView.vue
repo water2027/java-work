@@ -106,9 +106,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
-import { ElMessage } from 'element-plus';
-import { useRouter, useRoute } from 'vue-router';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { useUserStore } from '@/store/userStore';
 import { showMsg } from '@/components/MessageBox';
 import { CreateChatRoom } from '@/api/ChatRoomApi/Create';
@@ -120,7 +119,6 @@ import {
 } from '@/api/ChatRoomApi/GetAll';
 import { addMemberToChatRoom } from '@/api/ChatRoomMemberApi/GetAll';
 
-const router = useRouter();
 const route = useRoute();
 const activeIndex = ref('');
 const dialogFormVisible = ref(false);
@@ -129,17 +127,9 @@ const formLabelWidth = '120px';
 
 const { user } = useUserStore();
 
-const {
-  data: privateChats,
-  isLoading: privateIsLoading,
-  err: privateErr,
-} = GetPrivateChatRoomsByUserId(user.value.id);
+const { data: privateChats } = GetPrivateChatRoomsByUserId(user.value.id);
 
-const {
-  data: publicChats,
-  isLoading: publicIsLoading,
-  err: publicErr,
-} = GetPublicChatRoomsByUserId(user.value.id);
+const { data: publicChats } = GetPublicChatRoomsByUserId(user.value.id);
 
 const inputData: CustomFormData[] = [
   {
@@ -151,56 +141,49 @@ const inputData: CustomFormData[] = [
   },
 ];
 
-const createChatRoom = () => {
-  useEasyForm(inputData, (courseId: number) => {
-    const {
-      data: CreateChatRoomValue,
-      isLoading: CreateChatRoomIsLoading,
-      err: CreateChatRoomErr,
-    } = CreateChatRoom({
-      name: inputData[0].value,
-      courseId,
-    });
-    watch(CreateChatRoomIsLoading, () => {
-      if (CreateChatRoomErr.value) {
-        showMsg(CreateChatRoomErr.value);
-      } else {
-        showMsg(
-          CreateChatRoomValue?.value?.id
-            ? '创建成功，正在自动添加成员'
-            : '没有成功添加成员!!!!'
-        );
-        if (CreateChatRoomValue?.value?.id) {
-          showMsg('创建成功，正在自动添加成员');
-          const {
-            data: autoAddMemberData,
-            isLoading: autoAddMemberIsLoading,
-            err: autoAddMemberErr,
-          } = addMemberToChatRoom({
-            chatRoomId: CreateChatRoomValue.value?.id,
+const createChatRoom = async () => {
+  useEasyForm(inputData, async (courseId: number) => {
+    const { data: CreateChatRoomValue, err: CreateChatRoomErr } =
+      await CreateChatRoom({
+        name: inputData[0].value,
+        courseId,
+      });
+    if (CreateChatRoomErr) {
+      showMsg(CreateChatRoomErr);
+    } else {
+      showMsg(
+        CreateChatRoomValue?.id
+          ? '创建成功，正在自动添加成员'
+          : '没有成功添加成员!!!!'
+      );
+      if (CreateChatRoomValue?.id) {
+        showMsg('创建成功，正在自动添加成员');
+        const { err: autoAddMemberErr } =
+          await addMemberToChatRoom({
+            chatRoomId: CreateChatRoomValue?.id,
             userId: user.value?.id,
           });
-          watch(autoAddMemberIsLoading, () => {
-            if (autoAddMemberErr.value) {
-              showMsg(autoAddMemberErr.value);
-            } else {
-              showMsg('添加成员成功');
-            }
-          });
-        } else {
-          showMsg('没有成功添加成员');
-        }
+          if (autoAddMemberErr) {
+            showMsg(autoAddMemberErr);
+          } else {
+            showMsg('添加成员成功');
+          }
+      } else {
+        showMsg('没有成功添加成员');
       }
-    });
+    }
   });
 };
 
 const joinChatRoom = async () => {
   try {
-    await addMemberToChatRoom({
+    const { err } = await addMemberToChatRoom({
       chatRoomId: parseInt(form.value.chatRoomId),
       userId: user.value.id,
     });
+    if(err){
+      throw new Error(err);
+    }
     showMsg('加入成功');
     form.value = { chatRoomId: '' };
   } catch (error) {

@@ -27,12 +27,12 @@ const {
   err: membersErr,
 } = GetAllMember(chatRoomId.value);
 
-watch(membersIsLoading, () => {
+watch(membersIsLoading, async () => {
   if (membersErr.value) {
     showMsg(membersErr.value);
   } else {
     console.log(members.value);
-    fetchUsers();
+    await fetchUsers();
   }
 });
 
@@ -103,22 +103,16 @@ const showDetail = () => {
 };
 
 // 新增：获取所有用户数据
-const fetchUsers = () => {
+const fetchUsers = async () => {
   if (members.value?.length) {
     for (let i = 0; i < members.value.length; i++) {
       const id = members.value[i].userId;
-      const {
-        data: userInfo,
-        isLoading: userInfoIsLoading,
-        err: userInfoErr,
-      } = GetUserByID(id);
-      watch(userInfoIsLoading, () => {
-        if (userInfoErr.value) {
-          showMsg(userInfoErr.value);
-        } else {
-          users.value[id] = userInfo.value?.username || '未知用户';
-        }
-      });
+      const { data: userInfo, err: userInfoErr } = await GetUserByID(id);
+      if (userInfoErr) {
+        showMsg(userInfoErr);
+      } else {
+        users.value[id] = userInfo.value?.username || '未知用户';
+      }
     }
   }
 };
@@ -180,7 +174,11 @@ onBeforeUnmount(() => {
       v-if="detail"
       class="flex flex-col border-slate-500 h-[70vh] overflow-auto"
     >
-      <ContactsCard v-for="member in members" :key="member.id" :user="getUserById(member.id)"/>
+      <ContactsCard
+        v-for="member in members"
+        :key="member.id"
+        :user="getUserById(member.id)"
+      />
     </div>
   </div>
 </template>

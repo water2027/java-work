@@ -10,7 +10,7 @@ const { user } = useUserStore();
 
 console.log(user.value);
 
-const { data: friendships, isLoading, err } = GetAllFriends(user.value.id);
+const { data: friendships } = GetAllFriends(user.value.id);
 
 const refreshFriends = async () => {
   const { data, isLoading, err } = GetAllFriends(user.value.id);

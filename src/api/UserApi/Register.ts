@@ -1,4 +1,4 @@
-import { useRequest } from '../request';
+import { useAsyncRequest } from '../request';
 
 import {
   type RegisterReturn,
@@ -6,7 +6,7 @@ import {
 } from '@/model/dto/UserApi/Register';
 
 export function Register(data: RegisterSend) {
-  return useRequest<RegisterReturn>(
+  return useAsyncRequest<RegisterReturn>(
     '/users/register',
     {
       method: 'POST',

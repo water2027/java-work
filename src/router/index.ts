@@ -16,23 +16,6 @@ const router = createRouter({
             auth: true,
           },
         },
-
-        {
-          path: 'save',
-          name: 'save',
-          component: () => import('@/views/SaveView.vue'),
-          meta: {
-            auth: true,
-          },
-        },
-        {
-          path: 'about',
-          name: 'about',
-          component: () => import('@/views/AboutView.vue'),
-          meta: {
-            auth: false,
-          },
-        },
         {
           path: 'profile',
           name: 'profile',

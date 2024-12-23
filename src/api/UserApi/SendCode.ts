@@ -1,7 +1,7 @@
-import { useRequest } from "../request";
+import { useAsyncRequest } from "../request";
 
 export function SendCode(email:string, subject:string, text:string) {
-  return useRequest('/api/send',{
+  return useAsyncRequest('/api/send',{
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
