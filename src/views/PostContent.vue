@@ -93,7 +93,7 @@ watch(postIsLoading, async () => {
       post.value.authorId
     );
     if (authorErr) {
-      showMsg(authorErr);
+      // showMsg(authorErr);
     } else {
       post.value.authorName = authorInfo.username;
     }
@@ -123,7 +123,7 @@ watch(commentIsLoading, async () => {
         comments.value[i].authorId
       );
       if (authorErr) {
-        showMsg(authorErr);
+        // showMsg(authorErr);
       } else {
         comments.value[i].authorName = authorInfo.username;
       }
@@ -146,7 +146,7 @@ const reloadPost = () => {
         post.value.authorId
       );
       if (authorErr) {
-        showMsg(authorErr);
+        // showMsg(authorErr);
       } else {
         post.value.authorName = authorInfo.username;
       }
@@ -179,7 +179,7 @@ const reloadComments = async () => {
           comments.value[i].authorId
         );
         if (authorErr) {
-          showMsg(authorErr);
+          // showMsg(authorErr);
         } else {
           comments.value[i].authorName = authorInfo.username;
         }

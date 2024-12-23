@@ -54,7 +54,7 @@ const fetchPostInfo = async () => {
       if (!authorErr) {
         posts.value[i].authorName = authorInfo.username; // 设置作者名
       } else {
-        showMsg(authorErr); // 如果获取作者信息失败，显示错误信息
+        // showMsg(authorErr); // 如果获取作者信息失败，显示错误信息
       }
 
     // 获取评论信息
@@ -63,7 +63,7 @@ const fetchPostInfo = async () => {
       if (!commentErr.value) {
         posts.value[i].comments = comments.value; // 设置评论列表
       } else {
-        showMsg(commentErr.value); // 如果获取评论信息失败，显示错误信息
+        // showMsg(commentErr.value); // 如果获取评论信息失败，显示错误信息
       }
     });
 
@@ -72,7 +72,7 @@ const fetchPostInfo = async () => {
       if (!likeErr) {
         posts.value[i].likes = likes; // 设置收藏列表
       } else {
-        showMsg(likeErr); // 如果获取收藏信息失败，显示错误信息
+        // showMsg(likeErr); // 如果获取收藏信息失败，显示错误信息
       }
   }
 };
