@@ -5,9 +5,11 @@ import { useUserStore } from './store/userStore';
 
 import { useRouter } from 'vue-router';
 
+import { useAsyncRequest } from './api/request';
+
 const { setUser } = useUserStore();
 
-const router = useRouter()
+const router = useRouter();
 
 import { Login } from './api/UserApi/Login';
 onMounted(() => {
