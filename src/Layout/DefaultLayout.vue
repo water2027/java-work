@@ -19,21 +19,6 @@ interface Tab {
 
 const tabs = ref<Tab[]>([
   {
-    name: 'first',
-    label: '课程专区',
-    to: '/',
-  },
-  {
-    name: 'second',
-    label: '学习社区',
-    to: '/community',
-  },
-  {
-    name: 'third',
-    label: '个人中心',
-    to: '/profile',
-  },
-  {
     name: 'fourth',
     label: '来聊天吧',
     to: '/chat',
@@ -49,14 +34,19 @@ const tabs = ref<Tab[]>([
     to: '/postbar',
   },
   {
-    name: 'seventh',
-    label: '我的收藏',
-    to: '/save',
+    name: 'first',
+    label: '课程专区',
+    to: '/',
   },
   {
-    name: 'eighth',
-    label: '关于我们',
-    to: '/about',
+    name: 'second',
+    label: '学习社区',
+    to: '/community',
+  },
+  {
+    name: 'third',
+    label: '个人中心',
+    to: '/profile',
   },
 ]);
 
