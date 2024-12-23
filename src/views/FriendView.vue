@@ -94,7 +94,6 @@ const confirmSendRequest = async () => {
     showMsg("不可以向自己发送好友申请");
     return;
   }
-
   try {
     const { err } = await SendFriendRequest({
       senderUserId: user.value.id,

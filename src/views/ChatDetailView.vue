@@ -10,6 +10,7 @@ import { GetAllMember } from '@/api/ChatRoomMemberApi/GetAll';
 import { GetUserByID } from '@/api/UserApi/GetByID';
 import { GetChatRoomByID } from '@/api/ChatRoomApi/GetByID'; // 假设这个 API 存在
 import { showMsg } from '@/components/MessageBox';
+import type { User } from '@/model/User';
 
 const { user } = useUserStore();
 
@@ -39,12 +40,18 @@ watch(membersIsLoading, async () => {
 const messageContainer = ref<HTMLDivElement | null>(null);
 
 // 新增：存储用户数据
-const users = ref<{ [key: number]: string }>({});
+const users = ref<{ [key: number]: User }>({});
 
 const { data: chatRoom } = GetChatRoomByID(chatRoomId.value);
 
 const getUserById = (id: number) => {
-  return users.value[id] || '未知用户';
+  return users.value[id] || {
+    id,
+    username: '未知用户',
+    email: '',
+    role: 'user',
+    profilePicture: ''
+  };
 };
 
 const scrollToBottom = () => {
@@ -107,12 +114,25 @@ const fetchUsers = async () => {
   if (members.value?.length) {
     for (let i = 0; i < members.value.length; i++) {
       const id = members.value[i].userId;
-      const { data: userInfo, err: userInfoErr } = await GetUserByID(id);
-      if (userInfoErr) {
-        showMsg(userInfoErr);
-      } else {
-        users.value[id] = userInfo.value?.username || '未知用户';
-      }
+      const {
+        data: userInfo,
+        isLoading: userInfoIsLoading,
+        err: userInfoErr,
+      } = GetUserByID(id);
+      watch(userInfoIsLoading, () => {
+        if (userInfoErr.value) {
+          showMsg(userInfoErr.value);
+        } else {
+          // 确保存储完整的 User 对象
+          users.value[id] = userInfo.value || {
+            id,
+            username: '未知用户',
+            email: '未知邮箱',
+            role: '未知角色',
+            profilePicture: ''
+          };
+        }
+      });
     }
   }
 };
@@ -127,7 +147,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="flex flex-row w-full">
-    <div class="w-full flex flex-col border border-slate-500 h-[70vh]">
+    <div class="w-full flex flex-col border border-slate-500 h-[70vh] w-[100vw]">
       <div class="flex flex-row justify-center">
         <h2 class="text-center ml-auto">{{ chatRoom?.name || '加载中' }}</h2>
         <!-- 修改：展示聊天室名字 -->
@@ -142,7 +162,7 @@ onBeforeUnmount(() => {
           >
             <div class="flex justify-between items-center">
               <h3 class="text-lg font-bold">
-                {{ getUserById(message.userId) + ' 说：' }}
+                {{ getUserById(message.userId).username + ' 说：' }}
               </h3>
               <div class="text-sm text-gray-500">
                 {{ new Date(message.createdAt)?.toLocaleString() }}
@@ -172,13 +192,10 @@ onBeforeUnmount(() => {
     </div>
     <div
       v-if="detail"
-      class="flex flex-col border-slate-500 h-[70vh] overflow-auto"
+      class="flex flex-col border-slate-500 h-[100vh] overflow-hidden w-[20vw]"
     >
-      <ContactsCard
-        v-for="member in members"
-        :key="member.id"
-        :user="getUserById(member.id)"
-      />
+      <h2 class="text-xl font-bold p-4 border-b border-slate-300">聊天室成员列表</h2>
+      <ContactsCard v-for="member in members" :key="member.id" :user="getUserById(member.id)"/>
     </div>
   </div>
 </template>

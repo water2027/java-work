@@ -93,16 +93,18 @@ const sendVerificationCode = () => {
   const email = form.value[3].value;
   // 随机生成验证码
   const code = Math.floor(Math.random() * 1000000);
-  SendCode(email, '验证码', `您的验证码是 ${code}`)
-  .then(({ data, err }) => {
-    if (err) {
-      showMsg(err);
-    } else {
+  const { isLoading, err } = SendCode(email,'Java大学的注册验证码',`欢迎您来到Java大学——一个由软工学子自主开发的，基于Vue+SprintBoot的JavaWeb项目。\n您的验证码是 ${code}`);
+  watch(isLoading,()=>{
+    if (err.value) {
+      alert(err.value);
+    }else{
       realCode.value = code.toString();
     }
   });
 };
 </script>
+
+
 <template>
   <FormContainer
     class="w-1/2 mt-12"
