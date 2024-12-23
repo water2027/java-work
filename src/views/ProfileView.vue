@@ -1,17 +1,39 @@
 <script setup lang="ts">
 import { useUserStore } from '@/store/userStore'; // 引入 Pinia store
+import { onMounted } from 'vue';
 
 const userStore = useUserStore(); // 获取 user store
-const { user } = userStore
+const { user, setAvatar } = userStore;
+
+const onProfileImageChange = (e: Event)=>{
+  const file = (e.target as HTMLInputElement)?.files?.[0];
+  // base64 编码
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const base64 = e.target?.result as string;
+    setAvatar(base64);
+    console.log(base64);
+  };
+  file&&reader.readAsDataURL(file);
+}
 
 const logoutHandler = () => {
-  localStorage.removeItem('token'); // 移除 token
-  window.location.reload(); // 刷新页面
-}
+  localStorage.removeItem('token');
+  localStorage.removeItem('email')
+  localStorage.removeItem('password')
+  localStorage.removeItem('rememberMe')
+  window.location.reload();
+};
+
+onMounted(()=>{
+  if(localStorage.getItem('avatar')){
+    setAvatar(localStorage.getItem('avatar') as string)
+  }
+})
+
 </script>
 
 <template>
-  <!-- 如果已登录，显示个人主页信息 -->
   <div class="p-5 max-w-[600px] mx-auto text-center">
     <div class="bg-white p-5 rounded-lg shadow text-center mb-5">
       <!-- 头像，默认占位图 -->
@@ -23,7 +45,7 @@ const logoutHandler = () => {
       class="w-[150px] h-[150px] rounded-full object-cover mb-5 mx-auto"
       />
       <!-- 显示用户名 -->
-      <h2>{{ user.username||'未命名' }}</h2>
+      <h2>{{ user.username || '未命名' }}</h2>
       <!-- 显示邮箱 -->
       <p class="text-base text-gray-600">我的邮箱{{ user.email }}</p>
       <!-- 显示用户id -->
