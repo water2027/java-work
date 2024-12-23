@@ -144,7 +144,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="flex flex-row w-full">
     <div
-      class="w-full flex flex-col border border-slate-500 h-[70vh] w-[100vw]"
+      class="w-full flex flex-col border border-slate-500 h-[70vh]"
     >
       <div class="flex flex-row justify-center">
         <h2 class="text-center ml-auto">{{ chatRoom?.name || '加载中' }}</h2>
