@@ -7,12 +7,10 @@ import { useUserStore } from '@/store/userStore';
 import { watch } from 'vue';
 import { showMsg } from '@/components/MessageBox';
 
-const { user } = useUserStore();
-
 const { data: groupInfos, isLoading, err } = GetAllChatRooms();
 
 watch(isLoading,()=>{
-  // 如果名字以 private 开头，移出
+  // 如果名字以 Private 开头，移出
   if(err.value){
     showMsg(err.value);
   }else{
