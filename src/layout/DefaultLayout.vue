@@ -40,9 +40,11 @@ watch(
       <RouterLink to="/save" class="p-2 hover:bg-slate-500 rounded-lg"
         >我的收藏</RouterLink
       >
-      <RouterLink to="/about" class="p-2 hover:bg-slate-500 rounded-lg"
-        >关于我们</RouterLink
+
+      <RouterLink to="/videochat" class="p-2 hover:bg-slate-500 rounded-lg"
+        >测试功能</RouterLink
       >
+
     </div>
     <template v-if="!refresh">
       <RouterView class="mt-5" />
