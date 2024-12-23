@@ -48,7 +48,7 @@ const getUserById = (id: number) => {
   return (
     users.value[id] || {
       id,
-      username: '未知用户',
+      username: '孙君昊',
       email: '',
       role: 'user',
       profilePicture: '',
