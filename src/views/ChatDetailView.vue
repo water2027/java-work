@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useUserStore } from '@/store/userStore';
@@ -7,6 +7,9 @@ import { Client } from '@stomp/stompjs';
 
 import { GetAllMessage } from '@/api/MessageApi/GetAll';
 import { GetAllMember } from '@/api/ChatRoomMemberApi/GetAll';
+import { GetUserByID } from '@/api/UserApi/GetByID';
+import { GetChatRoomByID } from '@/api/ChatRoomApi/GetByID'; // 假设这个 API 存在
+import { showMsg } from '@/components/MessageBox';
 
 const { user } = useUserStore();
 
@@ -16,11 +19,33 @@ let client: Client | null = null;
 
 const messageText = ref('');
 const chatRoomId = ref<number>(Number(route.params.id));
+
 const { data: messages, isLoading } = GetAllMessage(chatRoomId.value);
-const { data: members } = GetAllMember(
-  chatRoomId.value
-);
+const {
+  data: members,
+  isLoading: membersIsLoading,
+  err: membersErr,
+} = GetAllMember(chatRoomId.value);
+
+watch(membersIsLoading, () => {
+  if (membersErr.value) {
+    showMsg(membersErr.value);
+  } else {
+    console.log(members.value);
+    fetchUsers();
+  }
+});
+
 const messageContainer = ref<HTMLDivElement | null>(null);
+
+// 新增：存储用户数据
+const users = ref<{ [key: number]: string }>({});
+
+const { data: chatRoom } = GetChatRoomByID(chatRoomId.value);
+
+const getUserById = (id: number) => {
+  return users.value[id] || '未知用户';
+};
 
 const scrollToBottom = () => {
   if (messageContainer.value) {
@@ -28,7 +53,7 @@ const scrollToBottom = () => {
   }
 };
 
-const apiUrl = import.meta.env.VITE_API_BASE_URL
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 const setupWebsocket = () => {
   if (!client || !client.connected) {
@@ -56,6 +81,10 @@ const setupWebsocket = () => {
 };
 
 const sendMessage = () => {
+  if (!messageText.value.trim()) {
+    showMsg('不可以发送空白消息');
+    return;
+  }
   client?.publish({
     destination: '/app/sendMessage',
     body: JSON.stringify({
@@ -73,6 +102,27 @@ const showDetail = () => {
   detail.value = !detail.value;
 };
 
+// 新增：获取所有用户数据
+const fetchUsers = () => {
+  if (members.value?.length) {
+    for (let i = 0; i < members.value.length; i++) {
+      const id = members.value[i].userId;
+      const {
+        data: userInfo,
+        isLoading: userInfoIsLoading,
+        err: userInfoErr,
+      } = GetUserByID(id);
+      watch(userInfoIsLoading, () => {
+        if (userInfoErr.value) {
+          showMsg(userInfoErr.value);
+        } else {
+          users.value[id] = userInfo.value?.username || '未知用户';
+        }
+      });
+    }
+  }
+};
+
 onMounted(() => {
   setupWebsocket();
 });
@@ -80,49 +130,61 @@ onBeforeUnmount(() => {
   client?.deactivate();
 });
 </script>
+
 <template>
   <div class="flex flex-row w-full">
-    <div class="w-full flex flex-col border border-slate-500 h-[80vh]">
+    <div class="w-full flex flex-col border border-slate-500 h-[70vh]">
       <div class="flex flex-row justify-center">
-        <h2 class="text-center ml-auto">{{ chatRoomId }}</h2>
+        <h2 class="text-center ml-auto">{{ chatRoom?.name || '加载中' }}</h2>
+        <!-- 修改：展示聊天室名字 -->
         <span class="ml-auto mr-4" @click="showDetail">...</span>
       </div>
       <template v-if="!isLoading">
-        <div ref="messageContainer" class="h-[70vh] overflow-auto">
+        <div ref="messageContainer" class="h-[60vh] overflow-auto">
           <div
             v-for="message in messages"
             :key="message.id"
             class="flex flex-col p-4 border-b border-gray-200"
           >
-            <h3 class="text-lg font-bold">{{ message.userId }}</h3>
-            <div class="mt-2 text-base">{{ message.content }}</div>
-            <div class="mt-2 text-sm text-gray-500">
-              {{ message.createdAt }}
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg font-bold">
+                {{ getUserById(message.userId) + ' 说：' }}
+              </h3>
+              <div class="text-sm text-gray-500">
+                {{ new Date(message.createdAt)?.toLocaleString() }}
+              </div>
             </div>
+            <div class="mt-2 text-base">{{ message.content }}</div>
           </div>
         </div>
         <div class="h-[10vh] w-full bg-slate-500">
-          <textarea
-            v-model="messageText"
-            class="h-full w-full border border-slate-900"
-          ></textarea>
-          <button @click="sendMessage">发送</button>
+          <div class="flex items-center h-full w-full p-0">
+            <el-input
+              v-model="messageText"
+              class="flex-grow h-full border border-slate-1200"
+              placeholder="Please input"
+            />
+            <button @click="sendMessage" class="h-full bg-[#409EFF] text-white">
+              发送
+            </button>
+          </div>
         </div>
       </template>
       <template v-else>
-        <div class="h-[80vh] flex justify-center items-center">
+        <div class="h-[70vh] flex justify-center items-center">
           <div class="spinner"></div>
         </div>
       </template>
     </div>
     <div
       v-if="detail"
-      class="flex flex-col border-slate-500 h-[80vh] overflow-auto"
+      class="flex flex-col border-slate-500 h-[70vh] overflow-auto"
     >
       <ContactsCard v-for="member in members" :key="member.id" :user="member" />
     </div>
   </div>
 </template>
+
 <style scoped>
 ::-webkit-scrollbar {
   width: 8px;
