@@ -44,6 +44,7 @@ window.addEventListener('beforeunload', () => {
 
 <template>
   <div>
+    <h2>测试版，如遇网络错误可能是自证书原因浏览器认为不安全</h2>
     <RouterView />
   </div>
 </template>
